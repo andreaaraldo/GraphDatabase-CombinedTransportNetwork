@@ -1,0 +1,20 @@
+Stoptime :
+- stop_id & trip_id & route_id = int
+- stop_sequence = int
+- arrival_time & departure_time = string
+- arrival_duration & departure_duration = int
+
+Stop :
+- stop_id = int
+- stop_code = string
+- stop_name = string
+- stop_desc = string
+- stop_lon = int
+- stop_lat = int
+
+Centroid :
+- centroid_id = int
+- centroid_lat = int
+- centroid_lon = int
+- departure_time = string
+- departure_duration = int

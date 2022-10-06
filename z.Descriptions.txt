@@ -1,0 +1,24 @@
+Ordre d'exécution des fichiers
+
+1°) Exécuter Grid_Centroids.py
+* crée les centroïdes
+
+2°) Ouvrir la base de données dans Neo4j
+
+3°) Exécuter Load_Graph_Centroids.py
+* crée le graphe dans Neo4j:
+  - noeuds : Stop, Stoptime, Centroid
+  - relations : PRECEDES, LOCATED_AT, CORRESPONDANCE, WALK
+
+4°) Choisir quelles stations seront désservies par le service DRT
+* mettre les stop_id dans le fichier 'list_station_id'
+
+5°) Exécuter Load_DRT
+* ajoute les relation DRT avec ses propriétés
+
+#################################################################
+
+'Grid_Centroids.py' : Crée les centroïdes
+'Load_Graph_Centroids.py' : Crée le graphe
+'Load_DRT.py' : Ajoute les relations DRT au graphe
+'Change_departure_time_centroid.py' : Changer les temps de départ de tous les centroïdes

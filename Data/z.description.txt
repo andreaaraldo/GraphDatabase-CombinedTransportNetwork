@@ -1,0 +1,18 @@
+Dossier devant contenir les fichiers de données GTFS
+
+Après avoir exécuter le fichier 'Grid_Centroids.py', ce dossier contiendra également les fichiers :
+* 'centroids.txt' :
+- centroid_id, centroid_lon, centroid_lat, distance, stop_id, departure_time, walking_time
+- propriétés des centroïdes
+
+* 'distances.txt' :
+- centroid_id, distances, stop_id
+- distances centroïde-station
+
+* 'df.txt' :
+- trip_id, arrival_time, departure_time, stop_id, stop_sequence, route_id
+- propriétés des stoptimes
+
+* 'positions.txt' :
+- centroid_id, longitude, latitude
+- positions des centroïdes
