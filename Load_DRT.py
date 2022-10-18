@@ -10,7 +10,7 @@ import shapely
 from shapely.geometry import Polygon, LineString, Point
 import geographiclib
 from geographiclib.geodesic import Geodesic
-
+import Parameters
 
 def create_graph():
     graph = "graphe_{}".format(int(h/60))
@@ -18,12 +18,10 @@ def create_graph():
     query += " '*', '*',{relationshipProperties: 'inter_time'})"
     execute(driver, query)
     
-    
 def delete_graph(h_min):
     graph = "graphe_{}".format(h_min)
     query = "CALL gds.graph.drop('{}')".format(graph)
     execute(driver, query)
-
 
 def get_stations_df():
     stations0 = []
@@ -33,7 +31,6 @@ def get_stations_df():
     stations['stop_id'] = stops.stop_id
     stations['station'] = [i for i in stations0]
     return stations
-
 
 # Plots
 def choose(id_station, show, show_choose):      
@@ -81,9 +78,7 @@ def show_choose(station_list):
     plt.xlabel("Longitude", fontsize = 16)
     plt.ylabel("Latitude", fontsize = 16)
     plt.show()
-    #plt.savefig(r".\Results\Stations.svg", format = 'svg')
-    
-
+    #plt.savefig(r".\Results\Stations.svg", format = 'svg') 
 
 # DRT
 def pax(densite, longueur, largeur, h):
@@ -98,18 +93,14 @@ def temps_cycle(cycle, vitesse, nb_pax): # secondes
 def M(temps_cycle, h):
     return temps_cycle/h
 
-
-
 # Neo4j
 import neo4j
 from neo4j import GraphDatabase
-
 
 URI = "bolt://127.0.0.1:7687"
 USER = "neo4j"
 PASSWORD = "123"
 driver = GraphDatabase.driver(URI, auth=(USER, PASSWORD))
-
 
 def execute(driver, query):
     """Execute a query."""
@@ -118,14 +109,12 @@ def execute(driver, query):
             result = session.run(query)
             return result
         
-        
 def get_res(driver, query):
     """Execute a query."""
     with driver.session() as session:
         if len(query) > 0:
             result = session.run(query)
         return [dict(i) for i in result]
-    
     
 def create(stop_id):
     print(stop_id, ':')
@@ -146,26 +135,18 @@ def create(stop_id):
     query = "MATCH ()-[r:DRT]->(st:Stoptime) WHERE st.stop_id = {} RETURN COUNT(r) AS nb".format(stop_id)
     nb_rel_DRT = get_res(driver,query)[0]['nb']
     print("Nombre de relations crées :", nb_rel_DRT)
-
-
-
 ###############################################################################
-
 stops = pd.read_csv(r".\Data\stops.txt")
 positions = pd.read_csv(r".\Data\positions.txt")
 stations = get_stations_df()
 
-
 start_time = time.time()
 # DRT
-h0 = [60, 120, 240, 960, 1920, 3840]
-densite = 26/1000000/3600 # 26 pax/h/km^2 = 26 pax/h/1000000 m^2 = 26/1000000 pax/h/m^2 = 26/1000000 pax/3600s/m^2 = 26/1000000/3600 pax/s/m^2 (Fig.6 Quadrifoglio 2009)
-longueur = 4000
-largeur = 2000
-v = 30*1000/3600
-
-h = h0[0]
-
+densite = Parameters.densite/1000000/3600
+longueur = Parameters.longueur
+largeur = Parameters.largeur
+v = Parameters.vitesse_DRT*1000/3600
+h = Parameters.h
 n = pax(densite, longueur, largeur, h)
 cycle = dist_cycle(longueur, largeur, n)
 tmps = temps_cycle(cycle, v, n)
@@ -184,22 +165,28 @@ print(drt_time/60, 'minutes')
 print(drt_time/3600, 'heures')
 print('ok')
 
-
-# delete_graph(4)
-
-
-# Nécessite de remplir le fichier texte 'list_station_id' avec les stop_id des stations choisies pour le service DRT
-stat = pd.read_csv(r".\Stations\list_station_id.txt")
-station_list = np.sort([i for i in stat.station_list])
+liste_stations = Parameters.liste_stations_DRT
+liste_stat = pd.DataFrame()
+liste_stat['station_list'] = liste_stations
+liste_stat.to_csv(r'.\Stations\list_station_id.txt', index = False)
+stat = pd.read_csv(r'.\Stations\list_station_id.txt')
+station_list = np.sort([i for i in liste_stations])
 
 show_choose(station_list)
 
 query = "MATCH ()-[r:DRT]-() DELETE r"
 execute(driver, query)
 
+ids_centroids = []
 for i in station_list:
     print("Station :", i)
     create(i)
+    ids_centr = pd.read_csv(r".\Stations\id_centroid_station_{}.txt".format(i)).centroid_id.values
+    for j in ids_centr:
+        ids_centroids.append(j)
+df_centr_ids = pd.DataFrame()
+df_centr_ids['centroid_id'] = np.unique(ids_centroids)
+df_centr_ids.to_csv(r'.\Results\ids.txt', index = False)
     
 # create_graph()
 
