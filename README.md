@@ -30,7 +30,7 @@
 - Ouvrir Neo4j Desktop
 
 - Créer un nouveau Projet : "+ New"
-
+*
 ![image](https://user-images.githubusercontent.com/93777543/194310066-a3fe87d4-088c-4836-bf36-2856d0059a9a.png)
 
 - Ajouter une base : "+ Add" > Local DBMS
@@ -63,9 +63,6 @@
 ### 6°) Modifier les valeurs dans le fichier **parameters.py**.
 
 ### 7°) 
-
-
-
 
 
 
