@@ -4,13 +4,14 @@ import matplotlib as matplotlib
 import matplotlib.pyplot as plt
 import math
 import time
-#!pip install shapely
-#!pip install geographiclib
+# !pip install shapely
+# !pip install geographiclib
 import shapely
 from shapely.geometry import Polygon, LineString, Point
 import geographiclib
 from geographiclib.geodesic import Geodesic
 import Parameters
+
 
 def create_graph():
     graph = "graphe_{}".format(int(h/60))
@@ -33,7 +34,7 @@ def get_stations_df():
     return stations
 
 # Plots
-def choose(id_station, show, show_choose):      
+def choose(id_station, show, show_choose): 
     station = stations.iloc[np.where(stations.stop_id == id_station)[0][0]]
     A = Point(station.station.x, station.station.y)
     L = Point(A.x - 0.051408, A.y)
@@ -44,8 +45,8 @@ def choose(id_station, show, show_choose):
     DL = Point(L.x,D.y)
     UR = Point(R.x,U.y)
     DR = Point(R.x,D.y)
-    centroids_left = positions.iloc[np.where((positions.longitude > L.x) & (positions.longitude < A.x) & (positions.latitude < U.y) & (positions.latitude > D.y))]
-    centroids_right = positions.iloc[np.where((positions.longitude < R.x) & (positions.longitude > A.x) & (positions.latitude < U.y) & (positions.latitude > D.y))]
+    centroids_left = pos_centroids.iloc[np.where((pos_centroids.longitude > L.x) & (pos_centroids.longitude < A.x) & (pos_centroids.latitude < U.y) & (pos_centroids.latitude > D.y))]
+    centroids_right = pos_centroids.iloc[np.where((pos_centroids.longitude < R.x) & (pos_centroids.longitude > A.x) & (pos_centroids.latitude < U.y) & (pos_centroids.latitude > D.y))]
     if show == True:
         fig, ax = plt.subplots()
         ax.scatter([L.x,R.x,U.x,D.x,UL.x,DL.x,UR.x,DR.x], [L.y,R.y,U.y,D.y,UL.y,DL.y,UR.y,DR.y])
@@ -137,11 +138,14 @@ def create(stop_id):
     print("Nombre de relations crées :", nb_rel_DRT)
 ###############################################################################
 stops = pd.read_csv(r".\Data\stops.txt")
-positions = pd.read_csv(r".\Data\positions.txt")
+pos_centroids = pd.read_csv(r".\Data\pos_centroids.txt")
 stations = get_stations_df()
 
+
 start_time = time.time()
+
 # DRT
+print("Infos DRT : \n")
 densite = Parameters.densite/1000000/3600
 longueur = Parameters.longueur
 largeur = Parameters.largeur
@@ -163,7 +167,7 @@ print('\n Temps de trajet DRT :')
 print(drt_time, 'secondes')
 print(drt_time/60, 'minutes')
 print(drt_time/3600, 'heures')
-print('ok')
+print('ok \n')
 
 liste_stations = Parameters.liste_stations_DRT
 liste_stat = pd.DataFrame()
@@ -192,3 +196,4 @@ df_centr_ids.to_csv(r'.\Results\ids.txt', index = False)
 
 end_time = time.time()
 print("temps d'exécution :", end_time - start_time)
+print((end_time - start_time)/60, 'minutes')

@@ -2,6 +2,9 @@
 # Cree le fichier 'df.txt'
 import numpy as np
 import pandas as pd
+import time
+
+start_time = time.time()
 
 stoptimes = pd.read_csv(r'.\Data\stop_times.txt')
 trips = pd.read_csv(r'.\Data\trips.txt')
@@ -19,3 +22,7 @@ df['stop_id'] = stoptimes.stop_id
 df['stop_sequence'] = stoptimes.stop_sequence
 df['route_id'] = df_routes 
 df.to_csv(r".\Data\df.txt", index = False) 
+
+end_time = time.time()
+print("temps d'exécution :", end_time - start_time)
+print((end_time - start_time)/60, 'minutes')

@@ -3,6 +3,9 @@
 import numpy as np
 import pandas as pd
 import Parameters
+import time
+
+start_time = time.time()
 
 distances = pd.read_csv(r'.\Data\distances.txt')
 pos_centroids = pd.read_csv(r'.\Data\pos_centroids.txt')
@@ -16,7 +19,7 @@ vitesse_walk = Parameters.vitesse_walk*1000/3600
 dist_min = []
 centroid_ids = []
 for i in np.unique(distances.centroid_id):
-    dist_min.append(distances.distances.iloc[np.where(distances.centroid_id == i)].sort_values().iloc[0])
+    dist_min.append(distances.distance.iloc[np.where(distances.centroid_id == i)].sort_values().iloc[0])
     centroid_ids.append(i)
 df_dist_min = pd.DataFrame()
 df_dist_min['centroid_id'] = centroid_ids
@@ -31,7 +34,7 @@ index_station = []
 longitudes = []
 latitudes = []
 for i in id_centroid_reduced:
-    dists = distances.distances.iloc[np.where(distances.centroid_id == i)].values
+    dists = distances.distance.iloc[np.where(distances.centroid_id == i)].values
     stations = distances.stop_id.iloc[np.where(distances.centroid_id == i)].values
     idx_walks = np.where(dists <= rayon_walk)[0]
     if len(idx_walks) != 0:
@@ -43,7 +46,7 @@ for i in id_centroid_reduced:
             longitudes.append(pos_centroids.iloc[np.where(pos_centroids.centroid_id == i)].longitude.iloc[0])
             latitudes.append(pos_centroids.iloc[np.where(pos_centroids.centroid_id == i)].latitude.iloc[0])
             index_station.append(j)
-            dists_vf.append(distances.iloc[np.where((distances.centroid_id == i) & (distances.stop_id == j))].distances.iloc[0])
+            dists_vf.append(distances.iloc[np.where((distances.centroid_id == i) & (distances.stop_id == j))].distance.iloc[0])
     else:
         idx_1000 = np.where(dists <= 6500)[0]
         min_dist = np.min([dists[i] for i in idx_1000])
@@ -53,7 +56,7 @@ for i in id_centroid_reduced:
         longitudes.append(pos_centroids.iloc[np.where(pos_centroids.centroid_id == i)].longitude.iloc[0])
         latitudes.append(pos_centroids.iloc[np.where(pos_centroids.centroid_id == i)].latitude.iloc[0])
         index_station.append(station_min)
-        dists_vf.append(distances.iloc[np.where((distances.centroid_id == i) & (distances.stop_id == station_min))].distances.iloc[0])
+        dists_vf.append(distances.iloc[np.where((distances.centroid_id == i) & (distances.stop_id == station_min))].distance.iloc[0])
 
 centr = pd.DataFrame()
 centr['centroid_id'] = index_centroid 
@@ -71,3 +74,7 @@ centroid_vf['stop_id'] = centr['stop_id']
 centroid_vf['departure_time'] = [departure_time]*len(centroid_vf)
 centroid_vf['walking_time'] = round(centroid_vf['distance']/vitesse_walk,3)
 centroid_vf.to_csv(r'.\Data\centroids.txt', index = False) # Fichier 'centroids.txt'
+
+end_time = time.time()
+print("temps d'exécution :", end_time - start_time)
+print((end_time - start_time)/60, 'minutes')

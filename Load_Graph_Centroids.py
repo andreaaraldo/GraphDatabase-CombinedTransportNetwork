@@ -1,5 +1,4 @@
 # Cree le graphe dans Neo4j
-# Cree le fichier 'df.txt'
 import numpy as np
 import neo4j
 import pandas as pd
@@ -66,20 +65,25 @@ def load_data():
     query = "MATCH (c:Centroid) SET c.departure_duration = toInteger(substring(c.departure_time, 0,2))*3600 + toInteger(substring(c.departure_time, 3,2))*60 + toInteger(substring(c.departure_time, 6,2))"
     execute(driver, query)
     # Cree les relations WALK et leur proprietes
-    ### ~ 30 min ###
     for centr in centroids.iloc:
-        print(centr.centroid_id)
         query = "MATCH (c:Centroid), (s:Stoptime) WITH {} AS walking_time, c AS c, s AS s WHERE c.centroid_id = {} AND s.stop_id = {} AND s.departure_duration >= c.departure_duration + walking_time \n".format(centr['walking_time'], centr['centroid_id'], centr['stop_id'])
         query += "WITH min(s.departure_duration) AS min_time, c AS c, walking_time AS walking_time \n"
         query += "MATCH (c), (st:Stoptime) WHERE st.stop_id = {} AND st.departure_duration = min_time \n".format(centr['stop_id'])
         query += "CREATE (c)-[r:WALK]->(st) SET r.distance = {} SET r.walking_time = walking_time SET r.inter_time = st.departure_duration - c.departure_duration".format(round(centr['distance'],3))
-        execute(driver, query)
+        execute(driver, query)    
+    # Ajout des indexes sur les stops et les centroides
+    query = "CREATE INDEX index_centroid FOR (n:Centroid) ON (n.centroid_id)"
+    execute(driver, query)
+    query = "CREATE INDEX index_stop FOR (n:Stop) ON (n.stop_id)"
+    execute(driver, query)
 ###############################################################################
 stops = pd.read_csv(r".\Data\stops.txt")
 centroids = pd.read_csv(r".\Data\centroids.txt")
 
 start_time = time.time()
+
 load_data()
+
 end_time = time.time()
 print("temps d'exécution :", end_time - start_time)
 print((end_time - start_time)/60, 'minutes')
