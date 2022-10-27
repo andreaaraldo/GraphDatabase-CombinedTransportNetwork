@@ -17,7 +17,7 @@ start_time = time.time()
 geod = Geodesic.WGS84
 
 # Importe 'stops.txt' & cree les points limites
-stops = pd.read_csv(r'.\Data\stops.txt')
+stops = pd.read_csv(r'.\Data\stops.txt') # stops = pd.read_csv(r'Data/stops.txt') for mac and linux
 min_lat = min(stops.stop_lat) # Coordonnées limites des stops
 max_lat = max(stops.stop_lat)
 min_lon = min(stops.stop_lon)
