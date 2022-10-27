@@ -76,10 +76,10 @@ The password must be the same as in the script `Load_Graph_Centroids.py`
 - Click on your project > Plugins > Ajouter les plugins **APOC**, **Graph Data Science Library** et **Neo4jStreams**
 
 ![image](https://user-images.githubusercontent.com/93777543/194311329-618a0cab-edef-4a9e-b610-2bfcddb8b038.png)
-- Démarrer la base
+- Démarrer la base, by clicking `Start`
 
 ![image](https://user-images.githubusercontent.com/93777543/194312939-3691190b-27a6-4c61-ad60-1b04e15f5c5b.png)
-- Ouvrir la base une fois démarrée
+- Ouvrir la base une fois démarrée, by clicking `Open`
 
 ![image](https://user-images.githubusercontent.com/93777543/194313052-ba71a5e7-3d8c-44b7-ad57-39fba84be0a3.png)
 
