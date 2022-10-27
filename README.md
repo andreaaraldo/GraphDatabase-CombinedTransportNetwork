@@ -40,10 +40,10 @@ They allow to compute accessibility values for all locations, along with additio
 Télécharger ses données au format GTFS et les importer dans le dossier **Data** en remplaçant ceux existant déjà (correspondant aux données GTFS de Royan).
 
 ### 2°) Exécuter le fichier **Grid_Centroids.py**.
-Ce fichier effectue le pavage de la ville et récupère les coordonnées des centroïdes. Il calcule les distances stations-centroïdes et les sauvegarde dans le fichier **distances.txt** dans le dossier **Data**. Il sauvegarde également les coordonnées des centroïdes et celles des stations dans les fichiers **pos_centroids.txt** et **pos_stations.txt** dans le dossier **Data**.
+This script takes `stops.txt` as input and effectue le pavage de la ville et récupère les coordonnées des centroïdes. Il calcule les distances stations-centroïdes et les sauvegarde dans le fichier **distances.txt** dans le dossier **Data**. Il sauvegarde également les coordonnées des centroïdes et celles des stations dans les fichiers **pos_centroids.txt** et **pos_stations.txt** dans le dossier **Data**.
 
 ### 3°) Exécuter le fichier **DataFrame_stoptimes.py**.
-Ce fichier regroupe les informations utiles sur les **routes** et **trips** dans les futures noeuds Stoptimes. Crée le fichier **df.txt** dans le dossier **Data**.
+This script takes `trips.txt` and `stop_times.txt` as input and creates **df.txt** dans le dossier **Data**, which contains summarized information about les **routes** et **trips**.
 
 ### 4°) Pour les centroïdes :
 - Modifier la valeur du paramètre **rayon_exclusif** correspondant au rayon maximal autour d'un centroïde dans lequel il doit y avoir au moins 1 station pour garder le centroïde en question.
