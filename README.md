@@ -85,8 +85,10 @@ The password must be the same as in the script `Load_Graph_Centroids.py`
 
 ![image](https://user-images.githubusercontent.com/93777543/194313133-71ccc8dc-62e6-431b-b9d5-bcf8a8ca3fbd.png)
 
+Please annotate the url showed in the Connection Status of neo4j and report it to `Load_Graph_Centroids.py`.
+
 ### 6°) Exécuter le fichier **Load_Graph_Centroids.py**.
-Ce fichier crée la base du graphe dans Neo4j, c'est-à-dire le réseau à partir des données GTFS + les noeuds Centroids et leurs relations WALK avec des Stoptimes.
+Ce fichier crée la base du graphe dans Neo4j, c'est-à-dire le réseau à partir des données GTFS + les noeuds Centroids et leurs relations WALK avec des Stoptimes. This script may take some time. You will see in neo4j that nodes are being added during the process (check "Node labels" on the left of the neo4j interface").
 
 ### 7°) Horaire de départ des centroïdes :
 On peut modifier l'horaire de départ des centroïdes (par rapport à la valeur initiale écrite dans `departure_time` in `Parameters.py`) après avoir créé la base du graphe sans devoir refaire tout le graphe. Le fichier **Change_departure_time_centroid.py** permet de modifier cet horaire et de re-créer les nouvelles relations WALK impactées par cette modification. Il faut modifier le paramètre **new_departure_time** dans le fichier **Parameters.py**, puis exécuter le fichier **Change_departure_time_centroid.py**.
@@ -104,7 +106,7 @@ Cette modification est à effectuer avant les étapes suivantes.
 Ce fichier trouve les PCC entre centroïdes (origine) et stations (destinations). Il récupère des informations sur ces PCC et les regroupe dans un dataframe. Il y a un dataframe par origine (centroïde) : **centroid_{centroid_id}.txt** dans le dossier **Results/h_{valeur de h en minute}_min**. Si il n'y a pas de chemin trouvé dans le graphe, on considère que l'on se rend à la destination directement à pieds (vol d'oiseau).
 
 ### 10°) Résultats :
-Exécuter le fichier **Res_DataFrames.py**. Ce fichier résume les résultats précédemment obtenus pour chaque centroïde dans un fichier **res_{valeur de h en minute}_min.txt**.
+Exécuter le fichier **Res_DataFrames.py**. Ce fichier résume les résultats précédemment obtenus pour chaque centroïde dans un fichier **res_{valeur de h en minute}_min.txt**. In this file, we have one line per each centroid, with the indication of the accessibiliy value (as computed in [our article](https://arxiv.org/abs/2210.08327)).
 
 ## Structure des fichiers sur les PCC et les résultats
 ### centroid_{centroid_id}.txt:
