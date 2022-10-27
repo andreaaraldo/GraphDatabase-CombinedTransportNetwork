@@ -1,5 +1,5 @@
 # GraphDatabase-CombinedTransportNetwork
-Please read (https://arxiv.org/abs/2210.08327)[our article] to know more about the problem of accessibility, demand-responsive transit and neo4j.
+Please read [our article](https://arxiv.org/abs/2210.08327) to know more about the problem of accessibility, demand-responsive transit and neo4j.
 
 ## Prerequirements
 Download and install `neo4j Desktop`. We suggest you to use Anaconda. You can install the required Python package from Anaconda. The Python libraries you need to install are:
