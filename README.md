@@ -21,6 +21,9 @@ Download and install `neo4j Desktop`. We suggest you to use Anaconda. You can in
 
 ## Objectifs
 Les fichiers **.py** permettent la création d'un graphe combinant un réseau de transport en commun dont on a téléchargé les données au format **GTFS** et un service de transport à la demande **Demand Responvie Transit** (DRT).
+
+You need to understand the GTFS data structure before using this code.
+
 They allow to compute accessibility values for all locations, along with additional information (see section at the end)
 
 ## Définitions
@@ -45,7 +48,7 @@ Télécharger ses données au format GTFS et les importer dans le dossier **Data
 This script takes `stops.txt` as input and effectue le pavage de la ville et récupère les coordonnées des centroïdes. Il calcule les distances stations-centroïdes et les sauvegarde dans le fichier **distances.txt** dans le dossier **Data**. Il sauvegarde également les coordonnées des centroïdes et celles des stations dans les fichiers **pos_centroids.txt** et **pos_stations.txt** dans le dossier **Data**.
 
 ### 3°) Exécuter le fichier **DataFrame_stoptimes.py**.
-This script takes `trips.txt` and `stop_times.txt` as input and creates **df.txt** dans le dossier **Data**, which contains summarized information about les **routes** et **trips**.
+This script takes `trips.txt` and `stop_times.txt` as input and creates **df.txt** dans le dossier **Data**, which contains summarized information about les **routes** et **trips**. Each line represents a stop_time with the following information: trip_id, route_id, departure_time etc.
 
 ### 4°) Pour les centroïdes :
 In `Parameters.py` modify the following values
