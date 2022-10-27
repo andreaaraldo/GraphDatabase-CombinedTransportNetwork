@@ -18,7 +18,10 @@ Download and install `neo4j Desktop`. We suggest you to use Anaconda. You can in
 
 
 ## Objectifs
-Les fichiers **.py** permettent la création d'un graphe combinant un réseau de transport en commun dont on a téléchargé les données au format **GTFS** et un service de transport à la demande **DRT**. Ils permettent également de rechercher les informations nécessaires au calcul d'**accessibilité** de positions choisies.
+Les fichiers **.py** permettent la création d'un graphe combinant un réseau de transport en commun dont on a téléchargé les données au format **GTFS** et un service de transport à la demande **Demand Responvie Transit** (DRT).
+They allow to compute accessibility values for all locations, along with additional information ([[#Structure of metrics file|see appropriate subsection]])
+https://arxiv.org/abs/2210.08327
+Ils permettent également de rechercher les informations nécessaires au calcul d'**accessibilité** de positions choisies.
 
 ## Définitions
 - **GTFS** : format de donnée utilisé pour l'échange de données de transport. Les données sont regroupées dans différents fichiers textes. Description de ce format : https://developers.google.com/transit/gtfs/reference/
@@ -95,7 +98,7 @@ Ce fichier trouve les PCC entre centroïdes (origine) et stations (destinations)
 Exécuter le fichier **Res_DataFrames.py**. Ce fichier résume les résultats précédemment obtenus pour chaque centroïde dans un fichier **res_{valeur de h en minute}_min.txt**.
 
 ## Structure des fichiers sur les PCC et les résultats
-### **centroid_{centroid_id}.txt** :
+### centroid_{centroid_id}.txt:
 1 ligne correspond à une destination accessible depuis le centroïde, colonnes :
 - **destination** : stop_id de la destination.
 - **total_time** : temps total du trajet (coût total du PCC ou temps direct à pieds).
@@ -108,7 +111,8 @@ Exécuter le fichier **Res_DataFrames.py**. Ce fichier résume les résultats pr
 - **drt_waiting_time** : temps d'attente pour le véhicule DRT si DRT emprunté, None sinon.
 - **direct_walking_time** : temps pour atteindre la destination directement à pieds.
 
-### **res_{valeur de h en minute}_min.txt** :
+### Structure of metrics file
+res_{valeur de h en minute}_min.txt :
 1 ligne correspond à un centroïde, colonnes :
 - **centroid** : centroi_id correspondant au centroïde.
 - **nb_destinations** : nombre de destinations accessibles au centroïde.
