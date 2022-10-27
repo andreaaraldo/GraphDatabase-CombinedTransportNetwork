@@ -19,7 +19,7 @@ Download and install `neo4j Desktop`. We suggest you to use Anaconda. You can in
 
 ## Objectifs
 Les fichiers **.py** permettent la création d'un graphe combinant un réseau de transport en commun dont on a téléchargé les données au format **GTFS** et un service de transport à la demande **Demand Responvie Transit** (DRT).
-They allow to compute accessibility values for all locations, along with additional information ([[#Structure of metrics file|see appropriate subsection]])
+They allow to compute accessibility values for all locations, along with additional information ([[#structure-metrics|see appropriate subsection]])
 https://arxiv.org/abs/2210.08327
 Ils permettent également de rechercher les informations nécessaires au calcul d'**accessibilité** de positions choisies.
 
@@ -112,6 +112,7 @@ Exécuter le fichier **Res_DataFrames.py**. Ce fichier résume les résultats pr
 - **direct_walking_time** : temps pour atteindre la destination directement à pieds.
 
 ### Structure of metrics file
+{{Anchor|structure-metrics}}
 res_{valeur de h en minute}_min.txt :
 1 ligne correspond à un centroïde, colonnes :
 - **centroid** : centroi_id correspondant au centroïde.
