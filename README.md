@@ -19,9 +19,7 @@ Download and install `neo4j Desktop`. We suggest you to use Anaconda. You can in
 
 ## Objectifs
 Les fichiers **.py** permettent la création d'un graphe combinant un réseau de transport en commun dont on a téléchargé les données au format **GTFS** et un service de transport à la demande **Demand Responvie Transit** (DRT).
-They allow to compute accessibility values for all locations, along with additional information ([[#structure-metrics|see appropriate subsection]])
-https://arxiv.org/abs/2210.08327
-Ils permettent également de rechercher les informations nécessaires au calcul d'**accessibilité** de positions choisies.
+They allow to compute accessibility values for all locations, along with additional information (see section at the end)
 
 ## Définitions
 - **GTFS** : format de donnée utilisé pour l'échange de données de transport. Les données sont regroupées dans différents fichiers textes. Description de ce format : https://developers.google.com/transit/gtfs/reference/
