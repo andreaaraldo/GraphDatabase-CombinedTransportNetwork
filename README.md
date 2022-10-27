@@ -51,7 +51,7 @@ This script takes `stops.txt` as input and effectue le pavage de la ville et ré
 This script takes `trips.txt` and `stop_times.txt` as input and creates **df.txt** dans le dossier **Data**, which contains summarized information about les **routes** et **trips**. Each line represents a stop_time with the following information: trip_id, route_id, departure_time etc.
 
 ### 4°) Pour les centroïdes :
-In `Parametres.py` modify the following values
+In `Parameters.py` modify the following values
 - **rayon_exclusif**: if a centroid does not have any station within this distance, it will be discarded.
 - **vitesse_walk**, **departure_time**, **rayon_walk**: these values dermine the speed of walking, the departure time and the maximum walkable distance.
 
