@@ -1,6 +1,33 @@
 # GraphDatabase-CombinedTransportNetwork
-## 
+
+## Objectifs
 Les fichiers **.py** permettent la création d'un graphe combinant un réseau de transport en commun dont on a téléchargé les données au format **GTFS** et un service de transport à la demande **DRT**. Ils permettent également de rechercher les informations nécessaires au calcul d'**accessibilité** de positions choisies.
+
+## Définitions
+- **GTFS** : format de donnée utilisé pour l'échange de données de transport. Les données sont regroupées dans différents fichiers textes. Description de ce format : https://developers.google.com/transit/gtfs/reference/
+- Service **DRT** : service de transport en commun à la demande dont le principe est que le véhicule DRT (= Demand-Responsive Transit) adapte sa route aux requêtes des usagers. Le modèle de service DRT présenté dans l'article "Assessing transportation accessibility equity via open data" de Amirhesam Badeanlou, Andrea Araldo et Marco Diana est utilisé.
+- **Accessibilité** : cette métrique permet de donner une idée de la qualité du service de transport d'une zone/centroïde. À chaque zone (= origine) est associé un ensemble de destinations potentielles. On récupère alors le temps total des plus-court-chemins pour chaque paire origine-destination. La somme de ces temps totaux est appelée **inaccessibilité**, son inverse étant l'**accessibilité**. Les destinations potentielles d'un centroïde sont les stations comprises entre deux rayons (paramètres ray_max et ray_min dans le fichier **Parameters.py**).
+
+### Construction du graphe
+- Le réseau de transport en commun fixe (données GTFS) est représenté dans le graphe par les noeuds **Stop** (stations physiques) et **Stoptime** (horaires d'arrêts) et les relations **PRECEDES** (succession des arrêts, sens et direction du train), **CORRESPONDANCE** et **LOCATED_AT** (horaire d'arrêt localisé à une station).
+- Les positions de départ des usagers sont représentées par les noeuds **Centroid** auquel est associé un horaire de départ (le même pour tous).
+- La posibilité de se déplacer à pieds d'un centroïde à une station est représentée par la relation **WALK**.
+- Le réseau de transport à la demande est modélisé selon les formules de l'article cité précédemment. La possibilité de prendre un véhicule DRT pour aller à une station à partir d'un centroïde est représentée par la relation **DRT**.
+- À chaque relation (= arc dans le graphe) est attribué la propriété **inter_time** : le temps nécessaire à effectué le trajet représenté par l'arc. C'est cette propriété qui va être considérée comme le coût lors de la recherche d'un plus-court-chemin.
+
+## Librairies utilisées en Python
+- shapely, shapely.geometry modules Polygon, LineString, Point
+- geographiclib, geographiclib.geodesic module Geodesic
+- geopandas
+- neo4j, module GraphDatabase
+- numpy
+- pandas
+- matplotlib, matplotlib.pyplot
+- time
+- os
+- math
+
+Il peut être nécessaire de créer un nouvel environnement pour la librairie geopandas.
 
 ## Etapes
 ### 1°) Choisir un réseau de transport.
