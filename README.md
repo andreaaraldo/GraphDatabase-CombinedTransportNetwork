@@ -59,6 +59,8 @@ Exécuter le fichier **Reduce_Centroid_Stop.py**.
 Ce fichier supprime les centroïdes trop isolés par rapport aux stations (par rapport au paramètre `rayon-exclusif`. Le fichier **centroids.txt** est créé dans le dossier **Data**, il contient les informations utiles sur les futurs noeuds Centroids.
 
 ### 5°) Ouvrir une base de données dans Neo4j :
+This operations in neo5j must be done only once (it might take a long time). For all the next runs, you should just ensure that neo4j is up and running.
+
 - Ouvrir Neo4j Desktop
 - Créer un nouveau Projet : "+ New"
 
