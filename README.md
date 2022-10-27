@@ -1,5 +1,8 @@
 # GraphDatabase-CombinedTransportNetwork
 
+## Prerequirements
+Download and install `neo4j Desktop`.
+
 ## Objectifs
 Les fichiers **.py** permettent la création d'un graphe combinant un réseau de transport en commun dont on a téléchargé les données au format **GTFS** et un service de transport à la demande **DRT**. Ils permettent également de rechercher les informations nécessaires au calcul d'**accessibilité** de positions choisies.
 
