@@ -1,7 +1,20 @@
 # GraphDatabase-CombinedTransportNetwork
 
 ## Prerequirements
-Download and install `neo4j Desktop`.
+Download and install `neo4j Desktop`. We suggest you to use Anaconda. You can install the required Python package from Anaconda. The Python libraries you need to install are:
+
+- shapely
+- geographiclib
+- geopandas
+- neo4j
+- numpy
+- pandas
+- matplotlib
+- time
+- os
+- math
+
+
 
 ## Objectifs
 Les fichiers **.py** permettent la création d'un graphe combinant un réseau de transport en commun dont on a téléchargé les données au format **GTFS** et un service de transport à la demande **DRT**. Ils permettent également de rechercher les informations nécessaires au calcul d'**accessibilité** de positions choisies.
@@ -18,19 +31,7 @@ Les fichiers **.py** permettent la création d'un graphe combinant un réseau de
 - Le réseau de transport à la demande est modélisé selon les formules de l'article cité précédemment. La possibilité de prendre un véhicule DRT pour aller à une station à partir d'un centroïde est représentée par la relation **DRT**.
 - À chaque relation (= arc dans le graphe) est attribué la propriété **inter_time** : le temps nécessaire à effectué le trajet représenté par l'arc. C'est cette propriété qui va être considérée comme le coût lors de la recherche d'un plus-court-chemin.
 
-## Librairies utilisées en Python
-- shapely, shapely.geometry modules Polygon, LineString, Point
-- geographiclib, geographiclib.geodesic module Geodesic
-- geopandas
-- neo4j, module GraphDatabase
-- numpy
-- pandas
-- matplotlib, matplotlib.pyplot
-- time
-- os
-- math
 
-Il peut être nécessaire de créer un nouvel environnement pour la librairie geopandas.
 
 ## Etapes
 ### 1°) Choisir un réseau de transport.
