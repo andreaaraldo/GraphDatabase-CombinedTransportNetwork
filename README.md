@@ -46,8 +46,9 @@ This script takes `stops.txt` as input and effectue le pavage de la ville et ré
 This script takes `trips.txt` and `stop_times.txt` as input and creates **df.txt** dans le dossier **Data**, which contains summarized information about les **routes** et **trips**.
 
 ### 4°) Pour les centroïdes :
-- Modifier la valeur du paramètre **rayon_exclusif** correspondant au rayon maximal autour d'un centroïde dans lequel il doit y avoir au moins 1 station pour garder le centroïde en question.
-- Modifier la valeur des paramètres concernant l'existence de relation WALK entre un Centroid et un Stoptime : **vitesse_walk**, **departure_time**, **rayon_walk**.
+In `Parameters.py` modify the following values
+- **rayon_exclusif**: if a centroid does not have any station within this distance, it will be discarded.
+- **vitesse_walk**, **departure_time**, **rayon_walk**: these values dermine the speed of walking, the departure time and the maximum walkable distance.
 - Exécuter le fichier **Reduce_Centroid_Stop.py**.
 Ce fichier supprime les centroïdes trop isolés par rapport aux stations. Le fichier **centroids.txt** est créé dans le dossier **Data**, il contient les informations utiles sur les futurs noeuds Centroids.
 
