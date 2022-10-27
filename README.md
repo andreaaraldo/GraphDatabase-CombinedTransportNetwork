@@ -89,7 +89,7 @@ The password must be the same as in the script `Load_Graph_Centroids.py`
 Ce fichier crée la base du graphe dans Neo4j, c'est-à-dire le réseau à partir des données GTFS + les noeuds Centroids et leurs relations WALK avec des Stoptimes.
 
 ### 7°) Horaire de départ des centroïdes :
-On peut modifier l'horaire de départ des centroïdes après avoir créé la base du graphe sans devoir refaire tout le graphe. Le fichier **Change_departure_time_centroid.py** permet de modifier cet horaire et de re-créer les nouvelles relations WALK impactées par cette modification. Il faut modifier le paramètre **new_departure_time** dans le fichier **Parameters.py**, puis exécuter le fichier **Change_departure_time_centroid.py**.
+On peut modifier l'horaire de départ des centroïdes (par rapport à la valeur initiale écrite dans `departure_time` in `Parameters.py`) après avoir créé la base du graphe sans devoir refaire tout le graphe. Le fichier **Change_departure_time_centroid.py** permet de modifier cet horaire et de re-créer les nouvelles relations WALK impactées par cette modification. Il faut modifier le paramètre **new_departure_time** dans le fichier **Parameters.py**, puis exécuter le fichier **Change_departure_time_centroid.py**.
 Cette modification est à effectuer avant les étapes suivantes.
 
 ### 8°) Ajouter le service DRT au graphe :
