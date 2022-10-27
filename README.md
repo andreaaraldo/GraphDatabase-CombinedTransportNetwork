@@ -94,7 +94,7 @@ Cette modification est à effectuer avant les étapes suivantes.
 
 ### 8°) Ajouter le service DRT au graphe :
 - Choisir les stations qui bénéfieront d'un service DRT = relever les identifiants de ces stations from `stops.txt`. Modifier le paramètre **liste_stations_DRT** dans le fichier **Parameters.py** en ajoutant les identifiants (**stop_id**) des stations choisies.
-- Choisir les valeurs des paramètres relatifs au service DRT : **densité**, **longueur**, **largeur**, **vitesse_DRT** et **h** dans `Parameters.py`
+- Choisir les valeurs des paramètres relatifs au service DRT : **densité** (how many people per Km / h live in that zone), **longueur**, **largeur** (of the area in which our DRT service will work), **vitesse_DRT** et **h** (the inter-time between a DRT departure and the next) dans `Parameters.py`
 - Exécuter enfin le fichier **Load_DRT.py**.
 - Le graphe du réseau combiné est terminé.
 
