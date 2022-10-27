@@ -67,6 +67,8 @@ This operations in neo5j must be done only once (it might take a long time). For
 ![image](https://user-images.githubusercontent.com/93777543/194310066-a3fe87d4-088c-4836-bf36-2856d0059a9a.png)
 - Ajouter une base : "+ Add" > Local DBMS
 
+The password must be the same as in the script `Load_Graph_Centroids.py`
+
 ![image](https://user-images.githubusercontent.com/93777543/194309986-75e32c4b-a5ab-4ed8-a3f9-59696b2dd426.png)
 - Choisir la version 4.4.0
 
