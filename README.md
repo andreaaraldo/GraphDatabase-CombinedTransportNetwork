@@ -55,9 +55,8 @@ In `Parameters.py` modify the following values
 - **rayon_exclusif**: if a centroid does not have any station within this distance, it will be discarded.
 - **vitesse_walk**, **departure_time**, **rayon_walk**: these values dermine the speed of walking, the departure time and the maximum walkable distance.
 
-
 Exécuter le fichier **Reduce_Centroid_Stop.py**.
-Ce fichier supprime les centroïdes trop isolés par rapport aux stations. Le fichier **centroids.txt** est créé dans le dossier **Data**, il contient les informations utiles sur les futurs noeuds Centroids.
+Ce fichier supprime les centroïdes trop isolés par rapport aux stations (par rapport au paramètre `rayon-exclusif`. Le fichier **centroids.txt** est créé dans le dossier **Data**, il contient les informations utiles sur les futurs noeuds Centroids.
 
 ### 5°) Ouvrir une base de données dans Neo4j :
 - Ouvrir Neo4j Desktop
