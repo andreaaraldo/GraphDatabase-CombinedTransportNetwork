@@ -1,8 +1,8 @@
 # Parametres
 
 ## Intervenant dans le fichier 'Reduce_Centroid_Stop.py' :
-rayon_exclusif = 6500 # supprime les centroides n'ayant aucune station situee dans ce rayon
-rayon_walk = 1000 # cree une relation WALK entre un centroide et les stations situees dans ce rayon
+rayon_exclusif = 6500 # supprime les centroides n'ayant aucune station situee dans ce rayon. In meters
+rayon_walk = 1000 # cree une relation WALK entre un centroide et les stations situees dans ce rayon. In meters
 departure_time = "'08:30:00'" # horaire de depart pour tous les centroides
 vitesse_walk = 3 # en km/h, vitesse moyenne de marche
 
@@ -10,7 +10,7 @@ vitesse_walk = 3 # en km/h, vitesse moyenne de marche
 new_departure_time = "'08:30:00'" # type String, nouvel horaire de départ pour tous les centroïdes
 
 ## Intervenant dans le fichier 'Load_DRT.py' :
-h0 = [60, 120, 240, 960, 1920, 3840] # valeurs de h possibles (proposées)
+h0 = [60, 120, 240, 960, 1920, 3840] # valeurs de h possibles (proposées). In seconds
 idx_h = 0 # intervient également dans le fichier 'Res_DataFrames.py' plus bas
 h = h0[idx_h] # valeur de h actuelle
 
