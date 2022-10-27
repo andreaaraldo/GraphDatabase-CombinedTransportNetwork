@@ -9,7 +9,7 @@ Download and install `neo4j Desktop`. We suggest you to use Anaconda. You can in
 - shapely
 - geographiclib
 - geopandas
-- neo4j
+- neo4j (or neo4j-python-driver)
 - numpy
 - pandas
 - matplotlib
