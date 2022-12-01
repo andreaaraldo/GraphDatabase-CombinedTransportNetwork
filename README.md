@@ -1,5 +1,5 @@
 # GraphDatabase-CombinedTransportNetwork
-Please read [our article](https://arxiv.org/abs/2210.08327) to know more about the problem of accessibility, demand-responsive transit and neo4j.
+Please read [our article](https://arxiv.org/abs/2210.08327) to know more about the problem of accessibility, demand-responsive transit and Neo4j.
 
 N.B. All file paths are expressed as in Windows. When you run the code you might have errors related to this. You just need to correct for your system.
 
