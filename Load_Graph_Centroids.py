@@ -7,8 +7,13 @@ import time
 
 URI = "bolt://127.0.0.1:7687"
 USER = "neo4j"
-PASSWORD = "123"
+PASSWORD = "12345678"
+# USER = "cassiopee"
+# PASSWORD = "12345678"
 driver = GraphDatabase.driver(URI, auth=(USER, PASSWORD))
+# driver = GraphDatabase.driver(URI)
+print(driver)
+
 
 def execute(driver, query):
     """Execute a query."""
@@ -21,7 +26,7 @@ def load_data():
     clean_query = "MATCH (n) DETACH DELETE n" # efface tout le graphe si il y en avait déjà un
     execute(driver, clean_query)
     
-    df = pd.read_csv(r".\Data\df.txt")
+    df = pd.read_csv(r"./Data/df.txt")
     # Cree les noeuds Stoptime
     for st in df.iloc:
         query = "CREATE (st:Stoptime) \n"
@@ -77,8 +82,8 @@ def load_data():
     query = "CREATE INDEX index_stop FOR (n:Stop) ON (n.stop_id)"
     execute(driver, query)
 ###############################################################################
-stops = pd.read_csv(r".\Data\stops.txt")
-centroids = pd.read_csv(r".\Data\centroids.txt")
+stops = pd.read_csv(r"./Data/stops.txt")
+centroids = pd.read_csv(r"./Data/centroids.txt")
 
 start_time = time.time()
 
