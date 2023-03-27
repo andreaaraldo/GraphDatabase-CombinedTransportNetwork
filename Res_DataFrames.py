@@ -69,7 +69,7 @@ def df_res(centroid_ids):
     somme = []  # somme des temps totaux des PCC
     accessibilite = []  # 1/somme des temps totaux des PCC
     for id_c in centroid_ids:
-        path = ".\Results\h_{}\centroid_{}.txt".format(h_str, id_c)
+        path = "./Results/h_{}/centroid_{}.txt".format(h_str, id_c)
         centroid = pd.read_csv(path)
         if all(centroid.total_time == 'None'):
             print(id_c, 'vide')
@@ -111,13 +111,13 @@ def df_res(centroid_ids):
 start_time = time.time()
 
 h_str = Parameters.h_str
-path = r".\Results\ids.txt".format(h_str)
+path = r"./Results/ids.txt".format(h_str)
 centroid_ids = [i for i in pd.read_csv(path)['centroid_id']]
 
 stations = Parameters.liste_stations_DRT
 
 data = df_res(centroid_ids)
-data.to_csv(r".\Results\res\res_{}.txt".format(h_str), index = False)
+data.to_csv(r"./Results/res/res_{}.txt".format(h_str), index = False)
 
 end_time = time.time()
 print("temps d'exécution :", end_time - start_time)

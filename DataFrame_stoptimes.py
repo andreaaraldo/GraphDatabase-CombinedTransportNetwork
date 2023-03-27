@@ -6,8 +6,8 @@ import time
 
 start_time = time.time()
 
-stoptimes = pd.read_csv(r'.\Data\stop_times.txt')
-trips = pd.read_csv(r'.\Data\trips.txt')
+stoptimes = pd.read_csv(r'./Data/stop_times.txt')
+trips = pd.read_csv(r'./Data/trips.txt')
 
 df_routes = []
 for i in range(len(stoptimes)):

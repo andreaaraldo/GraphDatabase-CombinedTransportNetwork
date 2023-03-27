@@ -7,9 +7,9 @@ import time
 
 start_time = time.time()
 
-distances = pd.read_csv(r'.\Data\distances.txt')
-pos_centroids = pd.read_csv(r'.\Data\pos_centroids.txt')
-pos_stations = pd.read_csv(r'.\Data\pos_stations.txt')
+distances = pd.read_csv(r'./Data/distances.txt')
+pos_centroids = pd.read_csv(r'./Data/pos_centroids.txt')
+pos_stations = pd.read_csv(r'./Data/pos_stations.txt')
 rayon_exclusif = Parameters.rayon_exclusif
 rayon_walk = Parameters.rayon_walk
 departure_time = Parameters.departure_time

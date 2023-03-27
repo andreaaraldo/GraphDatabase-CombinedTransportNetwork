@@ -8,7 +8,7 @@ import Parameters
 
 URI = "bolt://127.0.0.1:7687"
 USER = "neo4j"
-PASSWORD = "123"
+PASSWORD = "cassiopeedrt"
 driver = GraphDatabase.driver(URI, auth=(USER, PASSWORD))
 
 def execute(driver, query): # Exécute une requête Cypher
@@ -154,8 +154,8 @@ def get_dataframe(centroid_id): # Crée un dataframe pour chaque centroïde cont
 
 def dataframe(centroid_id): # Sauvegarde le dataframe dans un fichier.
     c, c_infos = get_dataframe(centroid_id)
-    c.to_csv(r".\Results\h_{}_min\centroid_{}.txt".format(int(h/60), centroid_id), index=False)
-    c_infos.to_csv(r".\Results\h_{}_min\centroid_{}_infos.txt".format(int(h/60), centroid_id), index=False)
+    c.to_csv(r"./Results/h_{}_min/centroid_{}.txt".format(int(h/60), centroid_id), index=False)
+    c_infos.to_csv(r"./Results/h_{}_min/centroid_{}_infos.txt".format(int(h/60), centroid_id), index=False)
     del c
     del c_infos
 ###############################################################################
@@ -166,7 +166,7 @@ ray_min = Parameters.ray_min
 h = Parameters.h
 
 # id des centroides pour lesquelles on calcule l'accessibilite
-centr = pd.read_csv(r".\Results\ids.txt")['centroid_id']
+centr = pd.read_csv(r"./Results/ids.txt")['centroid_id']
 
 # Vitesse de marche
 vitesse_walk = Parameters.vitesse_walk*1000/3600

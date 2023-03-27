@@ -137,8 +137,8 @@ def create(stop_id):
     nb_rel_DRT = get_res(driver,query)[0]['nb']
     print("Nombre de relations crées :", nb_rel_DRT)
 ###############################################################################
-stops = pd.read_csv(r".\Data\stops.txt")
-pos_centroids = pd.read_csv(r".\Data\pos_centroids.txt")
+stops = pd.read_csv(r"./Data/stops.txt")
+pos_centroids = pd.read_csv(r"./Data/pos_centroids.txt")
 stations = get_stations_df()
 
 
