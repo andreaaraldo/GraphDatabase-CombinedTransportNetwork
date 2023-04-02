@@ -7,12 +7,7 @@ import time
 
 URI = "bolt://127.0.0.1:7687"
 USER = "neo4j"
-<<<<<<< HEAD
 PASSWORD = "cassiopeedrt"
-=======
-PASSWORD = "12345678"
-
->>>>>>> 40c9848c6cc7e682ec921752ea13bec1ccc49e31
 driver = GraphDatabase.driver(URI, auth=(USER, PASSWORD))
 # driver = GraphDatabase.driver(URI)
 print(driver)
