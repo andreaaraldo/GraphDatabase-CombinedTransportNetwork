@@ -82,8 +82,9 @@ def get_times_first_station(res):
     return intertime, walking_time, waiting_time, DRT_time
 
 def get_dataframe(centroid_id): # Crée un dataframe pour chaque centroïde contenant les destinations, le coût total du PCC associé, et le temps de trajet direct à pieds (vol d'oiseau).
-    distances = pd.read_csv(r".\Data\distances.txt")
-    stops = pd.read_csv(r".\Data\stops.txt")
+    print("Création d'un dataframe pour chaque centroïde contenant les destinations, le coût total du PCC associé, et le temps de trajet direct à pieds (vol d'oiseau)... \n")
+    distances = pd.read_csv(r"./Data/distances.txt")
+    stops = pd.read_csv(r"./Data/stops.txt")
     distance = pd.DataFrame([distances.iloc[i, [1, 2]] for i in np.where(distances.centroid_id == centroid_id)[0]])
     destinations = []
     total_times = []
@@ -153,33 +154,43 @@ def get_dataframe(centroid_id): # Crée un dataframe pour chaque centroïde cont
     return df, df_infos
 
 def dataframe(centroid_id): # Sauvegarde le dataframe dans un fichier.
+    print("Sauvegarde du dataframe dans un fichier... \n")
     c, c_infos = get_dataframe(centroid_id)
     c.to_csv(r"./Results/h_{}_min/centroid_{}.txt".format(int(h/60), centroid_id), index=False)
     c_infos.to_csv(r"./Results/h_{}_min/centroid_{}_infos.txt".format(int(h/60), centroid_id), index=False)
     del c
     del c_infos
+    print("Done ! ")
+
+###############################################################################
 ###############################################################################
 start_time = time.time()
 
 ray_max = Parameters.ray_max
 ray_min = Parameters.ray_min
 h = Parameters.h
+print("Number of hours : ", h/60)
 
 # id des centroides pour lesquelles on calcule l'accessibilite
 centr = pd.read_csv(r"./Results/ids.txt")['centroid_id']
+print("centroid_id : ", centr)
 
 # Vitesse de marche
 vitesse_walk = Parameters.vitesse_walk*1000/3600
 
+print("Sauvegarde l'état du graphe sur lequel on cherche les PCC... \n")
 # # Sauvegarde l'état du graphe sur lequel on cherche les PCC
 create_graph()
 
-directory = "h_{}_min".format(int(h/60))
-parent_dir = ".\Results"
-path = os.path.join(parent_dir, directory)
-os.mkdir(path)
+#il n'y avait pas de 'if' avant, ce qui affichait une erreur car le dossier existait déjà 
+if int(h/60) > 1 :
+    directory = "h_{}_min".format(int(h/60))
+    parent_dir = "./Results"
+    path = os.path.join(parent_dir, directory)
+    os.mkdir(path)
 
 # PCC et sauvegarde les temps totaux
+print("Calcul des PCC et sauvegarde les temps totaux \n")
 for c in centr:
     print('centroid : ', c)
     dataframe(c)
