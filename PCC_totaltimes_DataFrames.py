@@ -5,6 +5,7 @@ from neo4j import GraphDatabase
 import time
 import os
 import Parameters
+import shutil
 
 URI = "bolt://127.0.0.1:7687"
 USER = "neo4j"
@@ -82,7 +83,6 @@ def get_times_first_station(res):
     return intertime, walking_time, waiting_time, DRT_time
 
 def get_dataframe(centroid_id): # Crée un dataframe pour chaque centroïde contenant les destinations, le coût total du PCC associé, et le temps de trajet direct à pieds (vol d'oiseau).
-    print("Création d'un dataframe pour chaque centroïde contenant les destinations, le coût total du PCC associé, et le temps de trajet direct à pieds (vol d'oiseau)... \n")
     distances = pd.read_csv(r"./Data/distances.txt")
     stops = pd.read_csv(r"./Data/stops.txt")
     distance = pd.DataFrame([distances.iloc[i, [1, 2]] for i in np.where(distances.centroid_id == centroid_id)[0]])
@@ -154,13 +154,12 @@ def get_dataframe(centroid_id): # Crée un dataframe pour chaque centroïde cont
     return df, df_infos
 
 def dataframe(centroid_id): # Sauvegarde le dataframe dans un fichier.
-    print("Sauvegarde du dataframe dans un fichier... \n")
+    print("Saving the dataframe to a file...")
     c, c_infos = get_dataframe(centroid_id)
     c.to_csv(r"./Results/h_{}_min/centroid_{}.txt".format(int(h/60), centroid_id), index=False)
     c_infos.to_csv(r"./Results/h_{}_min/centroid_{}_infos.txt".format(int(h/60), centroid_id), index=False)
     del c
     del c_infos
-    print("Done ! ")
 
 ###############################################################################
 ###############################################################################
@@ -178,19 +177,35 @@ print("centroid_id : ", centr)
 # Vitesse de marche
 vitesse_walk = Parameters.vitesse_walk*1000/3600
 
-print("Sauvegarde l'état du graphe sur lequel on cherche les PCC... \n")
 # # Sauvegarde l'état du graphe sur lequel on cherche les PCC
 create_graph()
 
-#il n'y avait pas de 'if' avant, ce qui affichait une erreur car le dossier existait déjà 
-if int(h/60) > 1 :
-    directory = "h_{}_min".format(int(h/60))
-    parent_dir = "./Results"
-    path = os.path.join(parent_dir, directory)
-    os.mkdir(path)
+
+#Création du dossier "h_{}_min".format(int(h/60)) dans Results
+print("Création du dossier 'h_", int(h/60), "_min'")
+
+directory = "h_{}_min".format(int(h/60))
+directory_old = "h_{}_min_old".format(int(h/60))
+
+dir_path = os.path.join('./Results', directory)
+old_dir_path = os.path.join('./Results', directory_old)
+
+#Si le dossier existe, alors on le renome _old et on supprime l'historique
+if os.path.isdir(dir_path):
+    #on supprime l'historique s'il existe
+    if os.path.isdir(old_dir_path):
+        os.rmdir(directory_old)
+        shutil.rmtree(old_dir_path)
+    #on renome le dossier pour le placer dans l'historique
+    os.rename(dir_path, old_dir_path)
+
+os.mkdir(dir_path)
+    
+
+#renomer le dossier .old --> créer le nouveau 
+# un seul dossier .old à la fois 
 
 # PCC et sauvegarde les temps totaux
-print("Calcul des PCC et sauvegarde les temps totaux \n")
 for c in centr:
     print('centroid : ', c)
     dataframe(c)
@@ -198,3 +213,5 @@ for c in centr:
 end_time = time.time()
 print("Temps d'exécution :", end_time - start_time)
 print((end_time - start_time)/60, 'minutes')
+
+#
