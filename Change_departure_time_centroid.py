@@ -7,6 +7,7 @@ import pandas as pd
 import neo4j
 from neo4j import GraphDatabase
 import Parameters
+import os
 
 URI = "bolt://127.0.0.1:7687"
 USER = "neo4j"
@@ -27,10 +28,11 @@ time = Parameters.new_departure_time
 query = "MATCH (c:Centroid) SET c.departure_time = localTime({})".format(time) # change le type en LocalTime Neo4j
 execute(driver, query)
 
-centroids = pd.read_csv(r'.\Data\centroids.txt')
+path_centroids = os.path.normpath('./Data/centroids.txt')
+centroids = pd.read_csv(path_centroids)
 centroids['departure_time'] = time
-centroids.to_csv(r'.\Data\centroids.txt', index = False)
-centroids = pd.read_csv(r'.\Data\centroids.txt')
+centroids.to_csv(path_centroids, index = False)
+centroids = pd.read_csv(path_centroids)
 for centr in centroids.iloc:
         print(centr)
         query = "MATCH (c:Centroid), (s:Stoptime) WITH {} AS walking_time, c AS c, s AS s WHERE c.centroid_id = {} AND s.stop_id = toString({}) AND duration.between(localTime('00:00:00'), s.departure_time).seconds >= (duration.between(localTime('00:00:00'), c.departure_time).seconds + walking_time) \n".format(centr['walking_time'], centr['centroid_id'], centr['stop_id'])

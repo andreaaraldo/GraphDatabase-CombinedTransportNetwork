@@ -4,6 +4,7 @@ import neo4j
 import pandas as pd
 from neo4j import GraphDatabase
 import time
+import os
 
 URI = "bolt://127.0.0.1:7687"
 USER = "neo4j"
@@ -28,7 +29,8 @@ def load_data():
     print('done \n')
     
     print('Opening data...')
-    df = pd.read_csv(r"./Data/df.txt")
+    path_df = os.path.normpath("./Data/df.txt")
+    df = pd.read_csv(path_df)
     print('done \n')
 
     print('Creating nodes Stoptime... ')
@@ -124,13 +126,18 @@ def load_data():
     execute(driver, query)
     print('done \n')
 ###############################################################################
-stops = pd.read_csv(r"./Data/stops.txt")
-centroids = pd.read_csv(r"./Data/centroids.txt")
+path_stops = os.path.normpath("./Data/stops.txt")
+stops = pd.read_csv(path_stops)
+
+path_centroids = os.path.normpath("./Data/centroids.txt")
+centroids = pd.read_csv(path_centroids)
 
 start_time = time.time()
+print("début : ", start_time)
 
 load_data()
 
 end_time = time.time()
 print("temps d'exécution :", end_time - start_time)
 print((end_time - start_time)/60, 'minutes')
+#27 min

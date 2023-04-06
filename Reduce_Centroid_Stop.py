@@ -4,12 +4,19 @@ import numpy as np
 import pandas as pd
 import Parameters
 import time
+import os
 
 start_time = time.time()
 
-distances = pd.read_csv(r'./Data/distances.txt')
-pos_centroids = pd.read_csv(r'./Data/pos_centroids.txt')
-pos_stations = pd.read_csv(r'./Data/pos_stations.txt')
+path_distances = os.path.normpath('./Data/distances.txt')
+distances = pd.read_csv(path_distances)
+
+path_pos_centroids = os.path.normpath('./Data/pos_centroids.txt')
+pos_centroids = pd.read_csv(path_pos_centroids)
+
+path_pos_stations = os.path.normpath('./Data/pos_stations.txt')
+pos_stations = pd.read_csv(path_pos_stations)
+
 rayon_exclusif = Parameters.rayon_exclusif
 rayon_walk = Parameters.rayon_walk
 departure_time = Parameters.departure_time
@@ -73,7 +80,9 @@ centroid_vf['distance'] = round(centr['distance'],3)
 centroid_vf['stop_id'] = centr['stop_id']
 centroid_vf['departure_time'] = [departure_time]*len(centroid_vf)
 centroid_vf['walking_time'] = round(centroid_vf['distance']/vitesse_walk,3)
-centroid_vf.to_csv(r'.\Data\centroids.txt', index = False) # Fichier 'centroids.txt'
+
+path_centroids = os.path.normpath('./Data/centroids.txt')
+centroid_vf.to_csv(path_centroids, index = False) # Fichier 'centroids.txt'
 
 end_time = time.time()
 print("temps d'exécution :", end_time - start_time)

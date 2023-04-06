@@ -83,8 +83,10 @@ def get_times_first_station(res):
     return intertime, walking_time, waiting_time, DRT_time
 
 def get_dataframe(centroid_id): # Crée un dataframe pour chaque centroïde contenant les destinations, le coût total du PCC associé, et le temps de trajet direct à pieds (vol d'oiseau).
-    distances = pd.read_csv(r"./Data/distances.txt")
-    stops = pd.read_csv(r"./Data/stops.txt")
+    path_distances = os.path.normpath("./Data/distances.txt")
+    distances = pd.read_csv(path_distances)
+    path_stops = os.path.normpath("./Data/stops.txt")
+    stops = pd.read_csv(path_stops)
     distance = pd.DataFrame([distances.iloc[i, [1, 2]] for i in np.where(distances.centroid_id == centroid_id)[0]])
     destinations = []
     total_times = []
@@ -156,8 +158,9 @@ def get_dataframe(centroid_id): # Crée un dataframe pour chaque centroïde cont
 def dataframe(centroid_id): # Sauvegarde le dataframe dans un fichier.
     print("Saving the dataframe to a file...")
     c, c_infos = get_dataframe(centroid_id)
-    c.to_csv(r"./Results/h_{}_min/centroid_{}.txt".format(int(h/60), centroid_id), index=False)
-    c_infos.to_csv(r"./Results/h_{}_min/centroid_{}_infos.txt".format(int(h/60), centroid_id), index=False)
+    path_centroids = os.path.normpath("./Results/h_{}_min/centroid_{}.txt".format(int(h/60), centroid_id))
+    c.to_csv(path_centroids, index=False)
+    c_infos.to_csv(path_centroids, index=False)
     del c
     del c_infos
 
@@ -171,7 +174,8 @@ h = Parameters.h
 print("Number of hours : ", h/60)
 
 # id des centroides pour lesquelles on calcule l'accessibilite
-centr = pd.read_csv(r"./Results/ids.txt")['centroid_id']
+path_ids = os.path.normpath("./Results/ids.txt")
+centr = pd.read_csv(path_ids)['centroid_id']
 print("centroid_id : ", centr)
 
 # Vitesse de marche
@@ -213,5 +217,3 @@ for c in centr:
 end_time = time.time()
 print("Temps d'exécution :", end_time - start_time)
 print((end_time - start_time)/60, 'minutes')
-
-#
