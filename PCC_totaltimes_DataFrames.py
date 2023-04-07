@@ -189,21 +189,22 @@ create_graph()
 print("Création du dossier 'h_", int(h/60), "_min'")
 
 directory = "h_{}_min".format(int(h/60))
-directory_old = "h_{}_min_old".format(int(h/60))
-
 dir_path = os.path.join('./Results', directory)
+directory_old = "h_{}_min_old".format(int(h/60))
 old_dir_path = os.path.join('./Results', directory_old)
 
 #Si le dossier existe, alors on le renome _old et on supprime l'historique
 if os.path.isdir(dir_path):
+    print(1)
     #on supprime l'historique s'il existe
-    if os.path.isdir(old_dir_path):
-        os.rmdir(directory_old)
+    if os.path.isdir(os.path.join("./Results", directory_old)):
+        print(2)
         shutil.rmtree(old_dir_path)
     #on renome le dossier pour le placer dans l'historique
     os.rename(dir_path, old_dir_path)
 
-os.mkdir(dir_path)
+dir_path_new = os.path.join('./Results', directory)
+os.mkdir(dir_path_new)
     
 
 #renomer le dossier .old --> créer le nouveau 
@@ -217,3 +218,5 @@ for c in centr:
 end_time = time.time()
 print("Temps d'exécution :", end_time - start_time)
 print((end_time - start_time)/60, 'minutes')
+
+#15-20 min 
