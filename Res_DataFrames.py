@@ -1,7 +1,5 @@
 import pandas as pd
 import numpy as np
-import matplotlib
-import matplotlib.pyplot as plt
 import os
 import Parameters
 import time
@@ -108,19 +106,50 @@ def df_res(centroid_ids):
     df['accessibilite'] = accessibilite
     return df
 
+################################################################################################################
 start_time = time.time()
 
 h_str = Parameters.h_str
+
+########################################################################
+res_path = os.path.normpath("./Results/res")
+
+if not os.path.exists(res_path):
+    # Crée le dossier 'res' s'il n'existe pas
+    os.mkdir(res_path)
+
+
+########################################################################
+directory_res = "res_{}.txt".format(h_str)
+dir_path = os.path.join("./Results/res", directory_res)
+old_directory_res = "res_{}_old.txt".format(h_str)
+old_dir_path = os.path.join("./Results/res", old_directory_res)
+
+#Si le dossier res existe, alors on le renome _old et on supprime l'historique
+if os.path.exists(dir_path):
+    print(1)
+    #on supprime l'historique s'il existe
+    if os.path.exists(old_dir_path):
+        os.remove(old_dir_path)
+        print(2)
+    #on renome le dossier pour le placer dans l'historique
+    os.rename(dir_path, old_dir_path)
+########################################################################
+
 path = os.path.normpath("./Results/ids.txt".format(h_str))
 
+print("Creating centroid_ids...")
 centroid_ids = [i for i in pd.read_csv(path)['centroid_id']]
+
 
 stations = Parameters.liste_stations_DRT
 
+print("Creating data...")
 data = df_res(centroid_ids)
+print("Done !")
 path_res = os.path.normpath("./Results/res/res_{}.txt".format(h_str))
 data.to_csv(path_res, index = False)
 
 end_time = time.time()
-print("temps d'exécution :", end_time - start_time)
-print((end_time - start_time)/60, 'minutes')
+
+print("temps d'exécution :", (end_time - start_time)/60, 'minutes')

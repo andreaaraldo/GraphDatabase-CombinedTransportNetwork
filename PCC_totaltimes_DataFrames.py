@@ -159,8 +159,9 @@ def dataframe(centroid_id): # Sauvegarde le dataframe dans un fichier.
     print("Saving the dataframe to a file...")
     c, c_infos = get_dataframe(centroid_id)
     path_centroids = os.path.normpath("./Results/h_{}_min/centroid_{}.txt".format(int(h/60), centroid_id))
+    path_centroids_info = os.path.normpath("./Results/h_{}_min/centroid_{}_infos.txt".format(int(h/60), centroid_id))
     c.to_csv(path_centroids, index=False)
-    c_infos.to_csv(path_centroids, index=False)
+    c_infos.to_csv(path_centroids_info, index=False)
     del c
     del c_infos
 
@@ -193,6 +194,7 @@ dir_path = os.path.join('./Results', directory)
 directory_old = "h_{}_min_old".format(int(h/60))
 old_dir_path = os.path.join('./Results', directory_old)
 
+
 #Si le dossier existe, alors on le renome _old et on supprime l'historique
 if os.path.isdir(dir_path):
     print(1)
@@ -205,10 +207,6 @@ if os.path.isdir(dir_path):
 
 dir_path_new = os.path.join('./Results', directory)
 os.mkdir(dir_path_new)
-    
-
-#renomer le dossier .old --> créer le nouveau 
-# un seul dossier .old à la fois 
 
 # PCC et sauvegarde les temps totaux
 for c in centr:
@@ -219,4 +217,4 @@ end_time = time.time()
 print("Temps d'exécution :", end_time - start_time)
 print((end_time - start_time)/60, 'minutes')
 
-#15-20 min 
+#15-20 min
