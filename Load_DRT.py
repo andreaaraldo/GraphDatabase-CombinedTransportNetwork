@@ -11,6 +11,7 @@ from shapely.geometry import Polygon, LineString, Point
 import geographiclib
 from geographiclib.geodesic import Geodesic
 import Parameters
+import os
 
 
 def create_graph():
@@ -21,7 +22,7 @@ def create_graph():
     
 def delete_graph(h_min):
     graph = "graphe_{}".format(h_min)
-    query = "CALL gds.graph.drop('{}')".format(graph)
+    query = "CALL gds.graph.drop('{}'".format(graph)
     execute(driver, query)
 
 def get_stations_df():
@@ -137,8 +138,10 @@ def create(stop_id):
     nb_rel_DRT = get_res(driver,query)[0]['nb']
     print("Nombre de relations crées :", nb_rel_DRT)
 ###############################################################################
-stops = pd.read_csv(r"./Data/stops.txt")
-pos_centroids = pd.read_csv(r"./Data/pos_centroids.txt")
+stops_path = os.path.normpath("./Data/stops.txt")
+pos_centroids_path = os.path.normpath("./Data/pos_centroids.txt")
+stops = pd.read_csv(stops_path)
+pos_centroids = pd.read_csv(pos_centroids_path)
 stations = get_stations_df()
 
 
@@ -172,8 +175,9 @@ print('ok \n')
 liste_stations = Parameters.liste_stations_DRT
 liste_stat = pd.DataFrame()
 liste_stat['station_list'] = liste_stations
-liste_stat.to_csv(r'.\Stations\list_station_id.txt', index = False)
-stat = pd.read_csv(r'.\Stations\list_station_id.txt')
+path_list_station = os.path.normpath('.\Stations\list_station_id.txt')
+liste_stat.to_csv(path_list_station, index = False)
+stat = pd.read_csv(path_list_station)
 station_list = np.sort([i for i in liste_stations])
 
 show_choose(station_list)
@@ -182,15 +186,19 @@ query = "MATCH ()-[r:DRT]-() DELETE r"
 execute(driver, query)
 
 ids_centroids = []
+
 for i in station_list:
     print("Station :", i)
     create(i)
-    ids_centr = pd.read_csv(r".\Stations\id_centroid_station_{}.txt".format(i)).centroid_id.values
+    path_ids_centroids = os.path.normpath(".\Stations\id_centroid_station_{}.txt".format(i))
+    ids_centr = pd.read_csv(path_ids_centroids).centroid_id.values
     for j in ids_centr:
         ids_centroids.append(j)
 df_centr_ids = pd.DataFrame()
 df_centr_ids['centroid_id'] = np.unique(ids_centroids)
-df_centr_ids.to_csv(r'.\Results\ids.txt', index = False)
+
+path_ids = os.path.normpath('\Results\ids.txt')
+df_centr_ids.to_csv(path_ids, index = False)
     
 # create_graph()
 
