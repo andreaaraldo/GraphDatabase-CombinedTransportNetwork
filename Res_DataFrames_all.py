@@ -81,6 +81,7 @@ def df_res(centroid_ids):
                 total = 0
                 for i in centroid.direct_walk_time:
                     total += i
+                    #print les valeurs négatives
                     print(i)
                 print("total = ", total)
                 print("1/total = ", 1/total)

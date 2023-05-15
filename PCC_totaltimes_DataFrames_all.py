@@ -195,7 +195,7 @@ path_ids_all = os.path.normpath("./Results/ids_all.txt")
 #création de ids_all
 if not os.path.isdir(path_ids_all):
     with open(path_ids_all, "w") as f:
-         # Écriture de la première ligne
+        # Écriture de la première ligne
         f.write("centroid_id\n")
         # Écriture des chiffres de 0 à 1318
         for i in range(1319):
