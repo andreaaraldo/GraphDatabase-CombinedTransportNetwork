@@ -1,0 +1,19 @@
+station dans rayon,station atteintes
+650,None
+649,None
+640,None
+639,None
+628,None
+629,None
+647,None
+648,None
+641,None
+642,None
+644,None
+645,None
+2633,None
+621,None
+620,None
+46,None
+756,None
+755,None

@@ -1,0 +1,23 @@
+station dans rayon,station atteintes
+787,None
+786,None
+769,None
+768,None
+781,None
+780,None
+774,None
+775,None
+315,None
+316,None
+795,None
+72,None
+166,None
+89,None
+840,None
+841,None
+835,None
+836,None
+837,None
+838,None
+847,None
+846,None

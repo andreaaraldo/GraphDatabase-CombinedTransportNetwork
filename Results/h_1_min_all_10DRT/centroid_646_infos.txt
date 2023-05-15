@@ -1,0 +1,18 @@
+station dans rayon,station atteintes
+452,None
+454,None
+455,None
+465,None
+464,None
+458,None
+459,None
+578,None
+579,None
+183,None
+87,None
+580,None
+31,None
+178,None
+95,None
+2407,None
+2318,None

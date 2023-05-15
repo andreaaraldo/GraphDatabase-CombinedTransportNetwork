@@ -1,0 +1,4 @@
+destination,total_time,transport,correspondance,1st_station,time_to_1st_station,walking_time,drt_time,drt_waiting_time,direct_walk_time
+2635,-600.0,WALK,28,607,None,6869,None,None,11758.387200000001
+452,-4260.0,WALK,19,607,None,6869,None,None,11812.7328
+607,11580.0,WALK,0,607,None,6869,None,None,6869.495999999999

@@ -1,0 +1,11 @@
+destination,total_time,transport,correspondance,1st_station,time_to_1st_station,walking_time,drt_time,drt_waiting_time,direct_walk_time
+2385,None,None,None,None,None,None,None,None,8824.9512
+2312,None,None,None,None,None,None,None,None,8866.392
+2402,None,None,None,None,None,None,None,None,11271.6972
+2321,None,None,None,None,None,None,None,None,11278.420799999998
+2407,None,None,None,None,None,None,None,None,10123.2252
+2316,None,None,None,None,None,None,None,None,9662.8272
+2318,None,None,None,None,None,None,None,None,10117.744799999999
+2348,None,None,None,None,None,None,None,None,11952.460799999999
+2424,None,None,None,None,None,None,None,None,10073.365199999998
+2343,None,None,None,None,None,None,None,None,10053.1992

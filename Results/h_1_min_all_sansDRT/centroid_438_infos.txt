@@ -1,0 +1,3 @@
+station dans rayon,station atteintes
+650,None
+649,None

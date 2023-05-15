@@ -1,0 +1,5 @@
+destination,total_time,transport,correspondance,1st_station,time_to_1st_station,walking_time,drt_time,drt_waiting_time,direct_walk_time
+647,None,None,None,None,None,None,None,None,11925.7596
+648,None,None,None,None,None,None,None,None,11947.670399999999
+756,None,None,None,None,None,None,None,None,11853.678
+755,None,None,None,None,None,None,None,None,11846.0064

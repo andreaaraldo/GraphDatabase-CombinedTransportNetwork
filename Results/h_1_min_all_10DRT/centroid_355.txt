@@ -1,0 +1,15 @@
+destination,total_time,transport,correspondance,1st_station,time_to_1st_station,walking_time,drt_time,drt_waiting_time,direct_walk_time
+650,None,None,None,None,None,None,None,None,11313.0444
+649,None,None,None,None,None,None,None,None,11297.420399999999
+640,None,None,None,None,None,None,None,None,11496.036
+639,None,None,None,None,None,None,None,None,11484.9816
+647,None,None,None,None,None,None,None,None,11208.628799999999
+648,None,None,None,None,None,None,None,None,11223.7956
+644,None,None,None,None,None,None,None,None,11932.706400000001
+645,None,None,None,None,None,None,None,None,11958.8268
+621,None,None,None,None,None,None,None,None,11490.9696
+620,None,None,None,None,None,None,None,None,11471.4324
+751,None,None,None,None,None,None,None,None,11771.813999999998
+750,None,None,None,None,None,None,None,None,11748.84
+756,None,None,None,None,None,None,None,None,11244.6864
+755,None,None,None,None,None,None,None,None,11241.27
