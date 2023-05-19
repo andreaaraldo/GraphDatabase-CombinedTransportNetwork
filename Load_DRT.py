@@ -4,6 +4,7 @@ import matplotlib as matplotlib
 import matplotlib.pyplot as plt
 import math
 import time
+from pyproj import Geod
 # !pip install shapely
 # !pip install geographiclib
 import shapely
@@ -16,7 +17,8 @@ import os
 
 def create_graph():
     graph = "graphe_{}".format(int(h/60))
-    query = "CALL gds.graph.create('{}',".format(graph)
+    #query = "CALL gds.graph.create('{}',".format(graph)    #version No4j 4.0
+    query = "CALL gds.graph.project('{}',".format(graph)     #version No4j 5.5
     query += " '*', '*',{relationshipProperties: 'inter_time'})"
     execute(driver, query)
     
@@ -66,7 +68,7 @@ def choose(id_station, show, show_choose):
         ax.legend(loc = (1.01,0.78), labels = ('limites','centroides à gauche','centroides à droite'))
         ax.set_title("Station '{}'.format(id_station", fontsize = 14)
         print("Distances avec la station '{}' :".format(id_station))
-        [print(j,geod.Inverse(A.y,A.x,i.y,i.x)['s12']) for i,j in zip([L,R,U,D,UL,DL,UR,DR],['L','R','U','D','UL','DL','UR','DR'])]
+        [print(j,Geod.Inverse(A.y,A.x,i.y,i.x)['s12']) for i,j in zip([L,R,U,D,UL,DL,UR,DR],['L','R','U','D','UL','DL','UR','DR'])]
         print('\n')
     return centroids_left, centroids_right
 
@@ -137,12 +139,15 @@ def create(stop_id):
     query = "MATCH ()-[r:DRT]->(st:Stoptime) WHERE st.stop_id = {} RETURN COUNT(r) AS nb".format(stop_id)
     nb_rel_DRT = get_res(driver,query)[0]['nb']
     print("Nombre de relations crées :", nb_rel_DRT)
+
+
 ###############################################################################
 stops_path = os.path.normpath("./Data/stops.txt")
 pos_centroids_path = os.path.normpath("./Data/pos_centroids.txt")
 stops = pd.read_csv(stops_path)
 pos_centroids = pd.read_csv(pos_centroids_path)
 stations = get_stations_df()
+print('stations : \n', stations.head())
 
 
 start_time = time.time()
@@ -163,7 +168,7 @@ drt_time = tmps/2
 print('h = : ', h/60)
 print('Nb pax : ', n)
 print('Distance cycle : ', cycle)
-print('Distance cycle : ', cycle)
+print('Temps cycle : ', tmps)
 print('Nombre de vehicule :', m)
 print('Attente drt : ', waiting_drt)
 print('\n Temps de trajet DRT :')

@@ -21,18 +21,23 @@ def execute(driver, query): # Exécute une requête Cypher
 
 def get_res(driver, query): # Récupère le return d'un requête Cypher.
     """Execute a query."""
+    start_time_gr = time.time()
     with driver.session() as session:
         if len(query) > 0:
             result = session.run(query)
         return [dict(i) for i in result]
+    end_time_gr = time.time()
+    print('get_res : ', start_time_gr - end_time_gr)
 
 def create_graph(): # Sauvegarde le graphe actuel.
     graph = "graphe_{}".format(int(h/60))
-    query = "CALL gds.graph.create('{}',".format(graph)
+    #query = "CALL gds.graph.create('{}',".format(graph)     #version No4j 4.0
+    query = "CALL gds.graph.project('{}',".format(graph)     #version No4j 5.5
     query += " '*', '*',{relationshipProperties: 'inter_time'})"
     execute(driver, query)
     
 def shortest_path(source_id, target_id): # Cherche le PCC d'une source à une target et retourne le coût (temps en secondes) total du PCC.
+    start_time_sp = time.time()
     query = "MATCH (source:Centroid), (target:Stop) WHERE source.centroid_id = {} AND target.stop_id = {} \n".format(source_id, target_id)
     query += "CALL gds.shortestPath.dijkstra.stream('graphe_{}',".format(int(h/60))
     query += "{sourceNode: id(source), targetNode: id(target), relationshipWeightProperty: 'inter_time'}) \n"
@@ -40,6 +45,8 @@ def shortest_path(source_id, target_id): # Cherche le PCC d'une source à une ta
     query += "CALL apoc.algo.cover(nodeIds) YIELD rel WITH startNode(rel) as a, endNode(rel) as b, rel as rel, path AS path, totalCost as totalCost \n"
     query += "RETURN a.stop_id as from, type(rel) as types, b.stop_id as to, rel.inter_time AS inter_times, rel.walking_time AS walking_time, rel.waiting_time AS waiting_DRT, rel.travel_time AS DRT_time, totalCost AS totaltime"
     return query
+    end_time_sp = time.time()
+    print('shortest_path : ', start_time_sp - end_time_sp)
 
 def get_transport(res):
     a = 0
@@ -174,11 +181,17 @@ ray_min = Parameters.ray_min
 h = Parameters.h
 print("Number of hours : ", h/60)
 
+###############################################################################
+# Gestion de dossiers 
+###############################################################################
 # id des centroides pour lesquelles on calcule l'accessibilite
 path_ids = os.path.normpath("./Results/ids.txt")
 centr = pd.read_csv(path_ids)['centroid_id']
 print("centroid_id : ", centr)
 
+###############################################################################
+#Calcul de PCC
+###############################################################################
 # Vitesse de marche
 vitesse_walk = Parameters.vitesse_walk*1000/3600
 
@@ -187,7 +200,7 @@ create_graph()
 
 
 #Création du dossier "h_{}_min".format(int(h/60)) dans Results
-print("Création du dossier 'h_", int(h/60), "_min'")
+print("Création du dossier 'h_",int(h/60),"_min'")
 
 directory = "h_{}_min".format(int(h/60))
 dir_path = os.path.join('./Results', directory)
@@ -197,10 +210,8 @@ old_dir_path = os.path.join('./Results', directory_old)
 
 #Si le dossier existe, alors on le renome _old et on supprime l'historique
 if os.path.isdir(dir_path):
-    print(1)
     #on supprime l'historique s'il existe
     if os.path.isdir(os.path.join("./Results", directory_old)):
-        print(2)
         shutil.rmtree(old_dir_path)
     #on renome le dossier pour le placer dans l'historique
     os.rename(dir_path, old_dir_path)
