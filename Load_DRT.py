@@ -17,8 +17,8 @@ import os
 
 def create_graph():
     graph = "graphe_{}".format(int(h/60))
-    query = "CALL gds.graph.create('{}',".format(graph)    #version No4j 4.0
-    #query = "CALL gds.graph.project('{}',".format(graph)     #version No4j 5.5
+    #query = "CALL gds.graph.create('{}',".format(graph)    #version No4j 4.0
+    query = "CALL gds.graph.project('{}',".format(graph)     #version No4j 5.5
     query += " '*', '*',{relationshipProperties: 'inter_time'})"
     execute(driver, query)
     
