@@ -27,7 +27,8 @@ def get_res(driver, query): # Récupère le return d'un requête Cypher.
 
 def create_graph(): # Sauvegarde le graphe actuel.
     graph = "graphe_{}".format(int(h/60))
-    query = "CALL gds.graph.create('{}',".format(graph)
+    #query = "CALL gds.graph.create('{}',".format(graph)     #version No4j 4.0
+    query = "CALL gds.graph.project('{}',".format(graph)     #version No4j 5.5
     query += " '*', '*',{relationshipProperties: 'inter_time'})"
     execute(driver, query)
     
