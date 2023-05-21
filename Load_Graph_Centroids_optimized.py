@@ -74,14 +74,14 @@ def import_using_load_csv():
     print("done \n")
 
  
-    #add the StopTimes and add relationship "Located at" with attribut inter_time=0
-    print("Adding StopTimes and Relationship LOCATED AT ..\n\n")
+    #add the Stoptimes and add relationship "Located at" with attribut inter_time=0
+    print("Adding Stoptimes and Relationship LOCATED AT ..\n\n")
     path_df = os.path.normpath("{}/Data/df.txt".format(curr_directory))
     query = """
         using periodic commit
         LOAD CSV WITH HEADERS FROM 'file:///"""+path_df+"""' AS row
         MATCH (s:Stop {stop_id: toInteger(row.stop_id)})
-        CREATE (st:StopTime {
+        CREATE (st:Stoptime {
             trip_id: toInteger(row.trip_id),
             arrival_time: row.arrival_time,
             departure_time: row.departure_time,
@@ -98,22 +98,24 @@ def import_using_load_csv():
     print("done \n")
 
 
-    #connect the StopTime sequences (ralation PRECEDES)
-    print("connect the StopTime sequences (ralation PRECEDES)..\n\n")
-    query="""
-        call apoc.periodic.iterate(
-        'MATCH (s1:StopTime) RETURN DISTINCT s1.trip_id as trip_id',
-        'match (st:StopTime {trip_id: trip_id}) with st order by st.stop_sequence asc
-        with collect(st) as stops
-        unwind range(0, size(stops)-2) as i
-        with stops[i] as curr, stops[i+1] as next
-        merge (curr)-[r:PRECEDES]->(next)
-        SET r.inter_time = next.departure_duration - curr.arrival_duration', 
-        {batchmode: "BATCH", parallel:true, parallel:true, batchSize:100});
-    """
-
-    #print(query)
+    #connect the Stoptime sequences (ralation PRECEDES)
+    print("connect the Stoptime sequences (ralation PRECEDES)..\n\n")
+    query = "MATCH (s1:Stoptime),(s2:Stoptime) WHERE s1.trip_id = s2.trip_id AND s2.stop_sequence = s1.stop_sequence+1 CREATE (s1)-[:PRECEDES]->(s2)"
     execute(driver, query)
+    query = "MATCH (s1:Stoptime)-[r:PRECEDES]->(s2:Stoptime) SET r.inter_time = s2.departure_duration - s1.arrival_duration"
+    execute(driver, query)
+    # query="""
+    #     call apoc.periodic.iterate(
+    #     'MATCH (s1:Stoptime) RETURN DISTINCT s1.trip_id as trip_id',
+    #     'match (st:Stoptime {trip_id: trip_id}) with st order by st.stop_sequence asc
+    #     with collect(st) as stops
+    #     unwind range(0, size(stops)-2) as i
+    #     with stops[i] as curr, stops[i+1] as next
+    #     merge (curr)-[r:PRECEDES]->(next)
+    #     SET r.inter_time = next.departure_duration - curr.arrival_duration', 
+    #     {batchmode: "BATCH", parallel:true, parallel:true, batchSize:100});
+    # """
+
     print("done \n")
 
 
@@ -121,7 +123,7 @@ def import_using_load_csv():
     print('Creating the "CORRESPONDANCE" relations and their "inter_time" property if "inter_time" is < 24h.....\n\n ')
     # Cree les relations "CORRESPONDANCE" et leur propriete 'inter_time' si 'inter_time' est < 24h (86400 sec)
     query = """
-        MATCH (s1:StopTime),(s2:StopTime) 
+        MATCH (s1:Stoptime),(s2:Stoptime) 
         WHERE s1.stop_id = s2.stop_id AND s1.route_id <> s2.route_id AND s1.arrival_duration < s2.departure_duration AND (s2.departure_duration - s1.arrival_duration) < 86400 
         Merge (s1)-[r:CORRESPONDANCE]->(s2) SET r.inter_time = s2.departure_duration - s1.arrival_duration"""
     execute(driver, query)
@@ -139,7 +141,7 @@ def import_using_load_csv():
             c.departure_time=substring(row.departure_time, 1, 2) + ':' + substring(row.departure_time, 4, 2) + ':' + substring(row.departure_time, 7, 2),
             c.departure_duration= toInteger(substring(row.departure_time, 1, 2))*3600 + toInteger(substring(row.departure_time, 4, 2))*60 + toInteger(substring(row.departure_time, 7, 2))
         WITH c,row, toInteger(row.walking_time) as walking_time
-        MATCH (st:StopTime {stop_id: toInteger(row.stop_id)}) 
+        MATCH (st:Stoptime {stop_id: toInteger(row.stop_id)}) 
         WHERE st.departure_duration >= c.departure_duration + walking_time
         WITH c, st,min(st.departure_duration) as min,row
         order by st.departure_duration, min

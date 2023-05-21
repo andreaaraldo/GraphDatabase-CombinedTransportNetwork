@@ -88,6 +88,21 @@ The password must be the same as in the script `Load_Graph_Centroids.py`
 Please annotate the url showed in the Connection Status of neo4j and report it to `Load_Graph_Centroids.py`.
 
 ### 6°) Exécuter le fichier **Load_Graph_Centroids.py**.
+
+"""
+in order to use load_csv with local files, make sure to do as follows:
+
+1.Find the neo4j.conf file for your Neo4j installation.
+
+2.Comment this line(By adding # in the start):
+dbms.directories.import=import
+
+3.Uncomment this line to allow CSV import from file URL:
+#dbms.security.allow_csv_import_from_file_urls=true
+
+4.Restart Neo4j
+"""
+
 Ce fichier crée la base du graphe dans Neo4j, c'est-à-dire le réseau à partir des données GTFS + les noeuds Centroids et leurs relations WALK avec des Stoptimes. This script may take some time. You will see in neo4j that nodes are being added during the process (check "Node labels" on the left of the neo4j interface").
 
 ### 7°) Horaire de départ des centroïdes :

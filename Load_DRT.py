@@ -103,7 +103,7 @@ from neo4j import GraphDatabase
 
 URI = "bolt://127.0.0.1:7687"
 USER = "neo4j"
-PASSWORD = "123"
+PASSWORD = "cassiopeedrt"
 driver = GraphDatabase.driver(URI, auth=(USER, PASSWORD))
 
 def execute(driver, query):
