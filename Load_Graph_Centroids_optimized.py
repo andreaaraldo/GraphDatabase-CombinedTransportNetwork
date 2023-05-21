@@ -93,7 +93,7 @@ def import_using_load_csv():
             }) -[r:LOCATED_AT]->(s)
         SET r.inter_time = 0;
     """
-    #print(query)
+    print(query)
     execute(driver, query)
     print("done \n")
 
@@ -104,17 +104,6 @@ def import_using_load_csv():
     execute(driver, query)
     query = "MATCH (s1:Stoptime)-[r:PRECEDES]->(s2:Stoptime) SET r.inter_time = s2.departure_duration - s1.arrival_duration"
     execute(driver, query)
-    # query="""
-    #     call apoc.periodic.iterate(
-    #     'MATCH (s1:Stoptime) RETURN DISTINCT s1.trip_id as trip_id',
-    #     'match (st:Stoptime {trip_id: trip_id}) with st order by st.stop_sequence asc
-    #     with collect(st) as stops
-    #     unwind range(0, size(stops)-2) as i
-    #     with stops[i] as curr, stops[i+1] as next
-    #     merge (curr)-[r:PRECEDES]->(next)
-    #     SET r.inter_time = next.departure_duration - curr.arrival_duration', 
-    #     {batchmode: "BATCH", parallel:true, parallel:true, batchSize:100});
-    # """
 
     print("done \n")
 
