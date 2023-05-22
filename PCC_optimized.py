@@ -47,16 +47,16 @@ def shortest_path(source_id, target_id): # Cherche le PCC d'une source à une ta
 
 
 def get_transport(res):
-    a = 0
     trsp = []
     for r in res:
         if (r['types'] == 'DRT') or (r['types'] == 'WALK'):
             trsp.append(r['types'])
-            a += 1
-    if a == 2:
+    if len(trsp) == 2:
         transport = 'DRT/WALK'
-    else:
+    elif len(trsp) == 1:
         transport = trsp[0]
+    else:
+        transport = 'None'
     return transport
 
 def get_correspondance_nbr(res):

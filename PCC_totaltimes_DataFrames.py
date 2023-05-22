@@ -31,8 +31,8 @@ def get_res(driver, query): # Récupère le return d'un requête Cypher.
 
 def create_graph(): # Sauvegarde le graphe actuel.
     graph = "graphe_{}".format(int(h/60))
-    #query = "CALL gds.graph.create('{}',".format(graph)     #version No4j 4.0
-    query = "CALL gds.graph.project('{}',".format(graph)     #version No4j 5.5
+    query = "CALL gds.graph.create('{}',".format(graph)     #version No4j 4.0
+    #query = "CALL gds.graph.project('{}',".format(graph)     #version No4j 5.5
     query += " '*', '*',{relationshipProperties: 'inter_time'})"
     execute(driver, query)
     
@@ -45,20 +45,18 @@ def shortest_path(source_id, target_id): # Cherche le PCC d'une source à une ta
     query += "CALL apoc.algo.cover(nodeIds) YIELD rel WITH startNode(rel) as a, endNode(rel) as b, rel as rel, path AS path, totalCost as totalCost \n"
     query += "RETURN a.stop_id as from, type(rel) as types, b.stop_id as to, rel.inter_time AS inter_times, rel.walking_time AS walking_time, rel.waiting_time AS waiting_DRT, rel.travel_time AS DRT_time, totalCost AS totaltime"
     return query
-    end_time_sp = time.time()
-    print('shortest_path : ', start_time_sp - end_time_sp)
 
 def get_transport(res):
-    a = 0
     trsp = []
     for r in res:
         if (r['types'] == 'DRT') or (r['types'] == 'WALK'):
             trsp.append(r['types'])
-            a += 1
-    if a == 2:
+    if len(trsp) == 2:
         transport = 'DRT/WALK'
-    else:
+    elif len(trsp) == 1:
         transport = trsp[0]
+    else:
+        transport = 'None'
     return transport
 
 def get_correspondance_nbr(res):
