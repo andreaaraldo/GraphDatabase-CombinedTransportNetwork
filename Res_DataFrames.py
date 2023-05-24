@@ -53,6 +53,7 @@ def get_walk_to_drt(drt, station_drt):
             walk_to_drt.append(station_drt[i]-drt[i])
     return walk_to_drt
 
+
 def df_res(centroid_ids):
     df = pd.DataFrame()
     centroid_id = []  # id des centroides pouvant prendre le DRT
@@ -65,7 +66,7 @@ def df_res(centroid_ids):
     nb_WALK = []  # nombre de PCC ayant pris la marche plutôt que le DRT
     nb_stations_DRT = []
     somme = []  # somme des temps totaux des PCC
-    accessibilite = []  # 1/somme des temps totaux des PCC
+    accessibilite = []  # nombre centroids/somme des temps totaux des PCC
     for id_c in centroid_ids:
         path = os.path.normpath("./Results/h_{}/centroid_{}.txt".format(h_str, id_c))
         centroid = pd.read_csv(path)
@@ -76,7 +77,7 @@ def df_res(centroid_ids):
             nb_trajets.append('None')
             nb_trajets_ok.append('None')
             somme.append(sum([i for i in centroid.direct_walk_time]))
-            accessibilite.append(1/sum([i for i in centroid.direct_walk_time]))
+            accessibilite.append(len(centroid)/sum([i for i in centroid.direct_walk_time]))
             nb_DRT.append('None')
             nb_DRT_ok.append('None')
             nb_WALK.append('None')
@@ -87,7 +88,7 @@ def df_res(centroid_ids):
             nb_trajets.append(len([i for i in centroid.total_time if i != 'None']))
             nb_trajets_ok.append(get_traj_rais(centroid))
             somme.append(sum(get_total_times(centroid)))
-            accessibilite.append(1/sum(get_total_times(centroid)))
+            accessibilite.append(len(centroid)/sum(get_total_times(centroid)))
             nb_DRT.append(get_nb_DRT(centroid))
             nb_DRT_ok.append(get_traj_rais_DRT(centroid))
             nb_WALK.append(len(np.where(centroid.transport == 'WALK')[0]))
