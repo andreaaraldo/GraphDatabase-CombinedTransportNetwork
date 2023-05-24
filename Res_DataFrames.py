@@ -66,28 +66,46 @@ def df_res(centroid_ids):
     nb_WALK = []  # nombre de PCC ayant pris la marche plutôt que le DRT
     nb_stations_DRT = []
     somme = []  # somme des temps totaux des PCC
+    inaccessibilite=[]  #somme des temps totaux des PCC/nombre centroids
     accessibilite = []  # nombre centroids/somme des temps totaux des PCC
     for id_c in centroid_ids:
-        path = os.path.normpath("./Results/h_{}/centroid_{}.txt".format(h_str, id_c))
-        centroid = pd.read_csv(path)
-        if all(centroid.total_time == 'None'):
+        path = os.path.normpath("./Results/h_{}_all_sansDRT/centroid_{}.txt".format(h_str, id_c))
+        centroid = pd.read_csv(path)  
+        if centroid.empty:
+            print(id_c, 'empty')
+            centroid_id.append(id_c)
+            nb_destinations.append(0)
+            nb_trajets.append('None')
+            nb_trajets_ok.append('None')
+            somme.append(0)
+            inaccessibilite.append(0)
+            accessibilite.append(0)
+            nb_DRT.append('None')
+            nb_DRT_ok.append('None')
+            nb_WALK.append('None')
+            nb_stations_DRT.append('None')
+
+        elif all(centroid.total_time == 'None') :
             print(id_c, 'vide')
             centroid_id.append(id_c)
             nb_destinations.append(len(centroid))
             nb_trajets.append('None')
             nb_trajets_ok.append('None')
             somme.append(sum([i for i in centroid.direct_walk_time]))
+            inaccessibilite.append(sum([i for i in centroid.direct_walk_time])/len(centroid))
             accessibilite.append(len(centroid)/sum([i for i in centroid.direct_walk_time]))
             nb_DRT.append('None')
             nb_DRT_ok.append('None')
             nb_WALK.append('None')
             nb_stations_DRT.append('None')
         else:
+            print(id_c,'ok')
             centroid_id.append(id_c)
             nb_destinations.append(len(centroid))
             nb_trajets.append(len([i for i in centroid.total_time if i != 'None']))
             nb_trajets_ok.append(get_traj_rais(centroid))
             somme.append(sum(get_total_times(centroid)))
+            inaccessibilite.append(sum(get_total_times(centroid))/len(centroid))
             accessibilite.append(len(centroid)/sum(get_total_times(centroid)))
             nb_DRT.append(get_nb_DRT(centroid))
             nb_DRT_ok.append(get_traj_rais_DRT(centroid))
@@ -103,7 +121,7 @@ def df_res(centroid_ids):
     df['WALK_to_station_DRT'] = get_walk_to_drt(nb_DRT, nb_stations_DRT)
     df['WALK'] = nb_WALK
     df['somme'] = somme
-    df['somme_moyennée'] = [i/j for i, j in zip(somme, nb_destinations)]
+    df['inaccessibilite'] = inaccessibilite
     df['accessibilite'] = accessibilite
     return df
 
