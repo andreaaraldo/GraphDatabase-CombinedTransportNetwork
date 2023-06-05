@@ -1,0 +1,6 @@
+route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color,route_text_color,route_sort_order
+113,DINAMO,1,Bourg Quévert - La Nourais,,3,,654897,FFFFFF,88
+114,DINAMO,2,Deroyer - Ecuyer - Deroyer,,3,,F07E31,FFFFFF,89
+115,DINAMO,3,Taden Mairie - La Nourais,,3,,E7343F,FFFFFF,90
+116,DINAMO,4,Lanvallay Clos des Ormeaux - Deroyer,,3,,00995A,FFFFFF,91
+387,DINAMO,5,Quévert Préval - Trélivan Mairie,,3,,F0B324,FFFFFF,99

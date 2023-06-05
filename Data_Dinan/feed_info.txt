@@ -1,0 +1,2 @@
+feed_publisher_name,feed_publisher_url,feed_lang,feed_start_date,feed_end_date,feed_version,feed_contact_email,feed_contact_url
+Transdev Bretagne,https://www.transdev-bretagne.com/bzh/open-data,fr,20220901,20230831,20230109T141958,contact-data.bzh@transdev.com,
