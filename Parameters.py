@@ -1,4 +1,8 @@
+import os 
+
 # Parametres
+
+nb_DRT = 10
 
 ## Intervenant dans le fichier 'Reduce_Centroid_Stop.py' :
 rayon_exclusif = 6500 # supprime les centroides n'ayant aucune station situee dans ce rayon. In meters
@@ -19,9 +23,25 @@ longueur = 4000 # en metres, longeur de la zone de service DRT (rectangulaire)
 largeur = 2000 # en metres, largeur de la zone de service DRT (rectangulaire)
 vitesse_DRT = 30 # en km/h, vitesse moyenne des vehicules DRT
 
-liste_stations_DRT = [124,2612,2568,2635,384,411,739,467,2503,509,830,590,629,178,2601,661,257,807,92,2459]
 # liste des stop_id des stations DRT
 
+################################################################################################
+# SAVOIR OÙ PLACER LES DRT GRÂCE À L'HEURISTIQUE
+################################################################################################
+
+# Chemin vers votre fichier .txt
+chemin_fichier = os.path.normpath('Heuristic/DRT_heuristique_simple.txt')
+
+# Lire le fichier .txt
+with open(chemin_fichier, 'r') as fichier:
+    fichier = fichier.readlines()
+
+# Extraire la liste à la ligne numéro m
+if nb_DRT  < len(fichier):
+    liste_stations_DRT = eval(fichier[nb_DRT])
+else:
+    print("Nous n'avons pas calculé l'heuristic pour ", nb_DRT , " DRT")
+################################################################################################
 
 ## Intervenant dans le fichier 'PCC_totaltimes_DataFrames.py' :
 ray_max = 10000 # en metres, rayon max auquel doivent appartenir les stations pour etre une destination du centroide
