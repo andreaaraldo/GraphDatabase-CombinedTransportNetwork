@@ -1,30 +1,18 @@
-import numpy as np
 import pandas as pd
 import matplotlib as matplotlib
-import matplotlib.pyplot as plt
-import math
-import time
-from pyproj import Geod
-# !pip install shapely
-# !pip install geographiclib
-import shapely
-from shapely.geometry import Polygon, LineString, Point
-import geographiclib
-from geographiclib.geodesic import Geodesic
-import Parameters
 import os
 import sys
-import matplotlib.pyplot as plt
+import Parameters
+
 
 # variables
 h = Parameters.h
 
-'''
 # Vérifier le nombre d'arguments passés
 if len(sys.argv) != 2:
-    print("Usage: python Load_DRT.py nombre_DRT")
+    print("Usage: python3 Heuristic_simple.py nombre_DRT")
     sys.exit(1)
-'''
+
 # Récupérer les variables
 nb_DRT = int(sys.argv[1])
 
