@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 import matplotlib as matplotlib
 import matplotlib.pyplot as plt
-import math
 import time
 from pyproj import Geod
 # !pip install shapely
@@ -14,6 +13,7 @@ from geographiclib.geodesic import Geodesic
 import Parameters
 import os
 
+nb_DRT = Parameters.nb_DRT
 
 def create_graph():
     graph = "graphe_{}".format(int(h/60))
@@ -37,17 +37,21 @@ def get_stations_df():
     return stations
 
 # Plots
+#id_station: L'identifiant de la station pour laquelle les opérations de visualisation doivent être effectuées.
+#show: Un booléen indiquant si les parcelles et les annotations doivent être affichées.
+#show_choose: Un booléen indiquant si les parcelles de sélection doivent être affichées.
 def choose(id_station, show, show_choose): 
     station = stations.iloc[np.where(stations.stop_id == id_station)[0][0]]
-    A = Point(station.station.x, station.station.y)
-    L = Point(A.x - 0.051408, A.y)
-    R = Point(A.x + 0.051408, A.y)
-    U = Point(A.x, A.y + 0.01799425)
-    D = Point(A.x, A.y - 0.01799431)
+    A = Point(station.station.x, station.station.y) # Les coordonnées de la station.
+    L = Point(A.x - 0.051408, A.y)                  # Le point situé à gauche de la station.
+    R = Point(A.x + 0.051408, A.y)                  # Le point situé à droite de la station.
+    U = Point(A.x, A.y + 0.01799425)                # Le point situé en haut de la station.
+    D = Point(A.x, A.y - 0.01799431)                # Le point situé en bas de la station.
     UL = Point(L.x,U.y)
     DL = Point(L.x,D.y)
     UR = Point(R.x,U.y)
     DR = Point(R.x,D.y)
+    # filtre les données du DataFrame pos_centroids pour récupérer les centroides qui se trouvent à gauche et à droite de la station, en fonction de leurs coordonnées :
     centroids_left = pos_centroids.iloc[np.where((pos_centroids.longitude > L.x) & (pos_centroids.longitude < A.x) & (pos_centroids.latitude < U.y) & (pos_centroids.latitude > D.y))]
     centroids_right = pos_centroids.iloc[np.where((pos_centroids.longitude < R.x) & (pos_centroids.longitude > A.x) & (pos_centroids.latitude < U.y) & (pos_centroids.latitude > D.y))]
     if show == True:
@@ -122,7 +126,7 @@ def get_res(driver, query):
     
 def create(stop_id):
     print(stop_id, ':')
-    left, _ = choose(stop_id, show = False, show_choose = True)
+    left, _ = choose(stop_id, show = True, show_choose = False)
     df_centroids = pd.DataFrame()
     df_centroids['centroid_id'] = left.centroid_id
     df_centroids['longitude'] = left.longitude
@@ -180,7 +184,7 @@ print('ok \n')
 liste_stations = Parameters.liste_stations_DRT
 liste_stat = pd.DataFrame()
 liste_stat['station_list'] = liste_stations
-path_list_station = os.path.normpath('.\Stations\list_station_id.txt')
+path_list_station = os.path.normpath('./Stations/list_station_id_{}DRT.txt'.format(nb_DRT))
 liste_stat.to_csv(path_list_station, index = False)
 stat = pd.read_csv(path_list_station)
 station_list = np.sort([i for i in liste_stations])

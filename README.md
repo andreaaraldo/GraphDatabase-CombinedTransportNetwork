@@ -87,7 +87,9 @@ The password must be the same as in the script `Load_Graph_Centroids.py`
 
 Please annotate the url showed in the Connection Status of neo4j and report it to `Load_Graph_Centroids.py`.
 
-### 6°) Exécuter le fichier **Load_Graph_Centroids.py**.
+### 6°) Exécuter le fichier **Load_Graph_Centroids_optimized.py**.
+
+Ne pas mettre d'accents ou caractères spéciaux dans le path.
 
 """
 in order to use load_csv with local files, make sure to do as follows:
@@ -108,6 +110,8 @@ Ce fichier crée la base du graphe dans Neo4j, c'est-à-dire le réseau à parti
 ### 7°) Horaire de départ des centroïdes :
 On peut modifier l'horaire de départ des centroïdes (par rapport à la valeur initiale écrite dans `departure_time` in `Parameters.py`) après avoir créé la base du graphe sans devoir refaire tout le graphe. Le fichier **Change_departure_time_centroid.py** permet de modifier cet horaire et de re-créer les nouvelles relations WALK impactées par cette modification. Il faut modifier le paramètre **new_departure_time** dans le fichier **Parameters.py**, puis exécuter le fichier **Change_departure_time_centroid.py**.
 Cette modification est à effectuer avant les étapes suivantes.
+
+### Pour 8, 9 10 : Excécuter Run_PCC_DRT.py
 
 ### 8°) Ajouter le service DRT au graphe :
 - Choisir les stations qui bénéfieront d'un service DRT = relever les identifiants de ces stations from `stops.txt`. Modifier le paramètre **liste_stations_DRT** dans le fichier **Parameters.py** en ajoutant les identifiants (**stop_id**) des stations choisies.

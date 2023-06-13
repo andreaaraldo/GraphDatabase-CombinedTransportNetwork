@@ -12,6 +12,8 @@ USER = "neo4j"
 PASSWORD = "cassiopeedrt"
 driver = GraphDatabase.driver(URI, auth=(USER, PASSWORD))
 
+nb_DRT = Parameters.nb_DRT
+
 def execute(driver, query): # Exécute une requête Cypher
     """Execute a query."""
     with driver.session() as session:
@@ -161,8 +163,8 @@ def get_dataframe(centroid_id): # Crée un dataframe pour chaque centroïde cont
 def dataframe(centroid_id): # Sauvegarde le dataframe dans un fichier.
     print("Saving the dataframe to a file...")
     c, c_infos = get_dataframe(centroid_id)
-    path_centroids = os.path.normpath("./Results/h_{}_min/centroid_{}.txt".format(int(h/60), centroid_id))
-    path_centroids_info = os.path.normpath("./Results/h_{}_min/centroid_{}_infos.txt".format(int(h/60), centroid_id))
+    path_centroids = os.path.normpath("./Results/h_{}_min_{}DRT/centroid_{}.txt".format(int(h/60), nb_DRT, centroid_id))
+    path_centroids_info = os.path.normpath("./Results/h_{}_min_{}DRT/centroid_{}_infos.txt".format(int(h/60), nb_DRT, centroid_id))
     c.to_csv(path_centroids, index=False)
     c_infos.to_csv(path_centroids_info, index=False)
     del c

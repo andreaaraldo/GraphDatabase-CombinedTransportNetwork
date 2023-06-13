@@ -4,6 +4,8 @@ import os
 import Parameters
 import time
 
+nb_DRT = Parameters.nb_DRT
+
 def get_nb_DRT(df_centroid):
     j = 0
     for i in df_centroid.transport:
@@ -139,9 +141,9 @@ if not os.path.exists(res_path):
 
 
 ########################################################################
-directory_res = "res_{}.txt".format(h_str)
+directory_res = "res_{}_{}DRT.txt".format(h_str, nb_DRT)
 dir_path = os.path.join("./Results/res", directory_res)
-old_directory_res = "res_{}_old.txt".format(h_str)
+old_directory_res = "res_{}_{}DRT_old.txt".format(h_str, nb_DRT)
 old_dir_path = os.path.join("./Results/res", old_directory_res)
 
 #Si le dossier res existe, alors on le renome _old et on supprime l'historique
@@ -166,7 +168,7 @@ stations = Parameters.liste_stations_DRT
 print("Creating data...")
 data = df_res(centroid_ids)
 print("Done !")
-path_res = os.path.normpath("./Results/res/res_{}.txt".format(h_str))
+path_res = os.path.normpath("./Results/res/res_{}_{}DRT.txt".format(h_str, nb_DRT))
 data.to_csv(path_res, index = False)
 
 end_time = time.time()
