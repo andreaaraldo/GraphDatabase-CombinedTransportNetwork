@@ -43,6 +43,7 @@ They allow to compute accessibility values for all locations, along with additio
 ## Etapes
 ### 1°) Choisir un réseau de transport.
 Télécharger ses données au format GTFS et les importer dans le dossier **Data** en remplaçant ceux existant déjà (correspondant aux données GTFS de Royan).
+Choisir la valeur **Data** dans **Parameters.py** pour selectionner la base de données GTFS associée. (par défaut : Data)
 
 ### 2°) Exécuter le fichier **Grid_Centroids.py**.
 This script takes `stops.txt` as input and effectue le pavage de la ville et récupère les coordonnées des centroïdes. Il calcule les distances stations-centroïdes et les sauvegarde dans le fichier **distances.txt** dans le dossier **Data**. Il sauvegarde également les coordonnées des centroïdes et celles des stations dans les fichiers **pos_centroids.txt** et **pos_stations.txt** dans le dossier **Data**.
