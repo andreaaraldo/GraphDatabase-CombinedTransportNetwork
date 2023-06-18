@@ -1,4 +1,3 @@
-import subprocess
 import os
 import Parameters
 import pandas as pd
@@ -6,12 +5,13 @@ import matplotlib.pyplot as plt
 
 
 nb_DRT = Parameters.nb_DRT
+Data = Parameters.Data
 
 ################################################################################
 # Import des données
 ################################################################################
 #Création d'un dataframe avec les résultats calculés
-path_res = os.path.normpath('Results/res/res_1_min_{}DRT.txt'.format(nb_DRT))
+path_res = os.path.normpath('Results_{}/res/res_1_min_{}DRT.txt'.format(Data, nb_DRT))
 res = pd.read_csv(path_res)
 res.head()
 
@@ -40,8 +40,9 @@ merged_data = data_centroids_drop.merge(res, left_on='centroid_id', right_on='ce
 ################################################################################
 somme_inacc = res['inaccessibilite'].sum()
 nb_centroids = res.shape[0]
-print()
-inacc_moy = somme_inacc/nb_centroids
+print("\n \n\n\n\n\n\n\n", res.head())
+#inacc_moy = somme_inacc/nb_centroids
+inacc_moy = 1
 
 ################################################################################
 # Tracer le graphique

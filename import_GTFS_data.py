@@ -94,7 +94,7 @@ subprocess.call(["python", Load_Graph_Centroids.py])
 """
 - Modifier les valeurs des rayons délimitant la zone à partir d'un centoïde à laquelle doit appartenir une station pour être une destination : **ray_min** et **ray_max** dans le fichier **Parameters.py**.
 - Exécuter le fichier **PCC_totaltimes_DataFrames.py**
-Ce fichier trouve les PCC entre centroïdes (origine) et stations (destinations). Il récupère des informations sur ces PCC et les regroupe dans un dataframe. Il y a un dataframe par origine (centroïde) : **centroid_{centroid_id}.txt** dans le dossier **Results/h_{valeur de h en minute}_min**. S'il n'y a pas de chemin trouvé dans le graphe, on considère que l'on se rend à la destination directement à pieds (vol d'oiseau).
+Ce fichier trouve les PCC entre centroïdes (origine) et stations (destinations). Il récupère des informations sur ces PCC et les regroupe dans un dataframe. Il y a un dataframe par origine (centroïde) : **centroid_{centroid_id}.txt** dans le dossier **Results_{}/h_{valeur de h en minute}_min**. S'il n'y a pas de chemin trouvé dans le graphe, on considère que l'on se rend à la destination directement à pieds (vol d'oiseau).
 """
 
 ### 10°) Résultats :

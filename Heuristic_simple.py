@@ -7,6 +7,7 @@ import Parameters
 
 # variables
 h = Parameters.h
+Data = Parameters.Data
 
 # Vérifier le nombre d'arguments passés
 if len(sys.argv) != 2:
@@ -58,7 +59,7 @@ else:
     print(filename, " already exists.")
 
 #Création d'un dataframe avec les résultats calculés
-path_res = os.path.normpath('Results/res/res_{}_min_0DRT.txt'.format(int(h/60)))
+path_res = os.path.normpath('Results_{}/res/res_{}_min_0DRT.txt'.format(Data, int(h/60)))
 res = pd.read_csv(path_res)
 print(res.head())
 

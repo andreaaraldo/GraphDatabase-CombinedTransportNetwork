@@ -7,7 +7,6 @@ from pyproj import Geod
 # !pip install shapely
 # !pip install geographiclib
 from shapely.geometry import Polygon, LineString, Point
-from geographiclib.geodesic import Geodesic
 import Parameters
 import os
 
@@ -206,7 +205,7 @@ for i in station_list:
 df_centr_ids = pd.DataFrame()
 df_centr_ids['centroid_id'] = np.unique(ids_centroids)
 
-path_ids = os.path.normpath('\Results\ids.txt')
+path_ids = os.path.join('./Results', 'ids.txt')
 df_centr_ids.to_csv(path_ids, index = False)
     
 # create_graph()

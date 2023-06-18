@@ -4,6 +4,8 @@ import os
 import Parameters
 import time
 
+Data = Parameters.Data
+
 def get_nb_DRT(df_centroid):
     j = 0
     for i in df_centroid.transport:
@@ -67,7 +69,7 @@ def df_res(centroid_ids):
     somme = []  # somme des temps totaux des PCC
     accessibilite = []  # 1/somme des temps totaux des PCC
     for id_c in centroid_ids:
-        path = os.path.normpath("./Results/h_{}_all/centroid_{}.txt".format(h_str, id_c))
+        path = os.path.normpath("./Results_{}/h_{}_all/centroid_{}.txt".format(Data, h_str, id_c))
         centroid = pd.read_csv(path)
         print("centroid : \n", centroid)
         if not centroid.empty : 
@@ -122,7 +124,7 @@ start_time = time.time()
 
 h_str = Parameters.h_str
 
-res_path = os.path.normpath("./Results/res")
+res_path = os.path.normpath("./Results_{}/res".format(Data))
 
 
 ##Gestion de l'historique 
@@ -131,9 +133,9 @@ if not os.path.exists(res_path):
     os.mkdir(res_path)
 
 directory_res_all = "res_{}_all.txt".format(h_str)
-dir_path = os.path.join("./Results/res", directory_res_all)
+dir_path = os.path.join("./Results_{}/res".format(Data), directory_res_all)
 old_directory_res_all = "res_{}_old.txt".format(h_str)
-old_dir_path = os.path.join("./Results/res", old_directory_res_all)
+old_dir_path = os.path.join("./Results_{}/res".format(Data), old_directory_res_all)
 
 #Si le dossier res existe, alors on le renome _old et on supprime l'historique
 if os.path.exists(dir_path):
@@ -146,7 +148,7 @@ if os.path.exists(dir_path):
 ##Fin de gestion de l'historique 
 
 
-path = os.path.normpath("./Results/ids_all.txt".format(h_str))
+path = os.path.normpath("./Results_{}/ids_all.txt".format(Data, h_str))
 
 print("Creating centroid_ids...")
 centroid_ids_all = [i for i in pd.read_csv(path)['centroid_id']]
@@ -157,7 +159,7 @@ stations = Parameters.liste_stations_DRT
 print("Creating data...")
 data = df_res(centroid_ids_all)
 print("Done !")
-path_res = os.path.normpath("./Results/res/res_{}_all.txt".format(h_str))
+path_res = os.path.normpath("./Results_{}/res/res_{}_all.txt".format(Data, h_str))
 data.to_csv(path_res, index = False)
 
 end_time = time.time()
