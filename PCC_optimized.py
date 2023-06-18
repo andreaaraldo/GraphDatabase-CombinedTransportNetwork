@@ -9,10 +9,12 @@ import shutil
 
 URI = "bolt://127.0.0.1:7687"
 USER = "neo4j"
+#USER = "neo4j_test"
 PASSWORD = "cassiopeedrt"
 driver = GraphDatabase.driver(URI, auth=(USER, PASSWORD))
 
 nb_DRT = Parameters.nb_DRT
+Data = Parameters.Data
 
 def execute(driver, query): # Exécute une requête Cypher
     """Execute a query."""
@@ -23,18 +25,14 @@ def execute(driver, query): # Exécute une requête Cypher
 
 def get_res(driver, query): # Récupère le return d'un requête Cypher.
     """Execute a query."""
-    start_time_gr = time.time()
     with driver.session() as session:
         if len(query) > 0:
             result = session.run(query)
         return [dict(i) for i in result]
-    end_time_gr = time.time()
-    print('get_res : ', start_time_gr - end_time_gr)
 
 def create_graph(): # Sauvegarde le graphe actuel.
     graph = "graphe_{}".format(int(h/60))
     query = "CALL gds.graph.create('{}',".format(graph)     #version No4j 4.0
-    # query = "CALL gds.graph.project('{}',".format(graph)     #version No4j 5.5
     query += " '*', '*',{relationshipProperties: 'inter_time'})"
     execute(driver, query)
     
@@ -187,9 +185,9 @@ path_ids = os.path.normpath("./Results/ids.txt")
 centr = pd.read_csv(path_ids)['centroid_id']
 print("centroid_id : ", centr)
 
-path_distances = os.path.normpath("./Data/distances.txt")
+path_distances = os.path.normpath("./{}/distances.txt".format(Data))
 distances = pd.read_csv(path_distances)
-path_stops = os.path.normpath("./Data/stops.txt")
+path_stops = os.path.normpath("./{}/stops.txt".format(Data))
 stops = pd.read_csv(path_stops)
 
 ###############################################################################
@@ -202,12 +200,12 @@ vitesse_walk = Parameters.vitesse_walk*1000/3600
 create_graph()
 
 
-#Création du dossier "h_{}_min".format(int(h/60)) dans Results
+#Création du dossier "h_{}_min_{}DRT".format(int(h/60), nb_DRT) dans Results
 print("Création du dossier 'h_",int(h/60),"_min'")
 
-directory = "h_{}_min".format(int(h/60))
+directory = "h_{}_min_{}DRT".format(int(h/60), nb_DRT)
 dir_path = os.path.join('./Results', directory)
-directory_old = "h_{}_min_old".format(int(h/60))
+directory_old = "h_{}_min_{}DRT_old".format(int(h/60), nb_DRT)
 old_dir_path = os.path.join('./Results', directory_old)
 
 

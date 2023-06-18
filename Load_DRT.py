@@ -6,14 +6,13 @@ import time
 from pyproj import Geod
 # !pip install shapely
 # !pip install geographiclib
-import shapely
 from shapely.geometry import Polygon, LineString, Point
-import geographiclib
 from geographiclib.geodesic import Geodesic
 import Parameters
 import os
 
 nb_DRT = Parameters.nb_DRT
+Data = Parameters.Data
 
 def create_graph():
     graph = "graphe_{}".format(int(h/60))
@@ -107,6 +106,7 @@ from neo4j import GraphDatabase
 
 URI = "bolt://127.0.0.1:7687"
 USER = "neo4j"
+#USER = "neo4j_test"
 PASSWORD = "cassiopeedrt"
 driver = GraphDatabase.driver(URI, auth=(USER, PASSWORD))
 
@@ -146,7 +146,7 @@ def create(stop_id):
 
 
 ###############################################################################
-stops_path = os.path.normpath("./Data/stops.txt")
+stops_path = os.path.normpath("./{}/stops.txt".format(Data))
 pos_centroids_path = os.path.normpath("./Data/pos_centroids.txt")
 stops = pd.read_csv(stops_path)
 pos_centroids = pd.read_csv(pos_centroids_path)

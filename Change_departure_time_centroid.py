@@ -12,6 +12,9 @@ import os
 URI = "bolt://127.0.0.1:7687"
 USER = "neo4j"
 PASSWORD = "123"
+driver = GraphDatabase.driver(URI, auth=(USER, PASSWORD))
+
+Data = Parameters.Data
 
 def execute(driver, query):
     """Execute a query."""
@@ -28,7 +31,7 @@ time = Parameters.new_departure_time
 query = "MATCH (c:Centroid) SET c.departure_time = localTime({})".format(time) # change le type en LocalTime Neo4j
 execute(driver, query)
 
-path_centroids = os.path.normpath('./Data/centroids.txt')
+path_centroids = os.path.normpath('./{}/centroids.txt'.format(Data))
 centroids = pd.read_csv(path_centroids)
 centroids['departure_time'] = time
 centroids.to_csv(path_centroids, index = False)

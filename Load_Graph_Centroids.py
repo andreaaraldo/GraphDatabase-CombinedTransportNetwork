@@ -5,13 +5,17 @@ import pandas as pd
 from neo4j import GraphDatabase
 import time
 import os
+import Parameters
 
 URI = "bolt://127.0.0.1:7687"
 USER = "neo4j"
+#USER = "neo4j_test"
 PASSWORD = "cassiopeedrt"
 driver = GraphDatabase.driver(URI, auth=(USER, PASSWORD))
 # driver = GraphDatabase.driver(URI)
 print(driver)
+
+Data = Parameters.Data
 
 
 def execute(driver, query):
@@ -29,7 +33,7 @@ def load_data():
     print('done \n')
     
     print('Opening data...')
-    path_df = os.path.normpath("./Data/df.txt")
+    path_df = os.path.normpath('./{}/df.txt'.format(Data))
     df = pd.read_csv(path_df)
     print('done \n')
 
@@ -126,7 +130,7 @@ def load_data():
     execute(driver, query)
     print('done \n')
 ###############################################################################
-path_stops = os.path.normpath("./Data/stops.txt")
+path_stops = os.path.normpath("./{}/stops.txt".format(Data))
 stops = pd.read_csv(path_stops)
 
 path_centroids = os.path.normpath("./Data/centroids.txt")

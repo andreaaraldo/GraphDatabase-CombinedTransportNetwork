@@ -16,14 +16,14 @@ res = pd.read_csv(path_res)
 res.head()
 
 # Exécuter le fichier "mon_script.py" en utilisant Python
-path_centroids = os.path.normpath('./Data/centroids.txt')
+path_centroids = os.path.normpath('./{}/centroids.txt'.format(Data))
 
 data_centroids = pd.read_csv(path_centroids)
 data_centroids.head()
 
 data_centroids_drop = data_centroids.drop_duplicates(subset='centroid_id')
 
-path_stops = os.path.normpath('Data/stops.txt')
+path_stops = os.path.normpath('{}/stops.txt'.format(Data))
 path_stops_drt = os.path.normpath('./Stations/list_station_id_{}DRT.txt'.format(nb_DRT))
 
 stops = pd.read_csv(path_stops)

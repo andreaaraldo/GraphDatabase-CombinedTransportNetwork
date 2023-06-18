@@ -9,8 +9,12 @@ import shutil
 
 URI = "bolt://127.0.0.1:7687"
 USER = "neo4j"
+#USER = "neo4j_test"
 PASSWORD = "cassiopeedrt"
 driver = GraphDatabase.driver(URI, auth=(USER, PASSWORD))
+
+nb_DRT = Parameters.nb_DRT
+Data = Parameters.Data
 
 def execute(driver, query): # Exécute une requête Cypher
     """Execute a query."""
@@ -88,9 +92,9 @@ def get_times_first_station(res):
     return intertime, walking_time, waiting_time, DRT_time
 
 def get_dataframe(centroid_id): # Crée un dataframe pour chaque centroïde contenant les destinations, le coût total du PCC associé, et le temps de trajet direct à pieds (vol d'oiseau).
-    path_distances = os.path.normpath("./Data/distances.txt")
+    path_distances = os.path.normpath("./{}/distances.txt".format(Data))
     distances = pd.read_csv(path_distances)
-    path_stops = os.path.normpath("./Data/stops.txt")
+    path_stops = os.path.normpath("./{}/stops.txt".format(Data))
     stops = pd.read_csv(path_stops)
     distance = pd.DataFrame([distances.iloc[i, [1, 2]] for i in np.where(distances.centroid_id == centroid_id)[0]])
     destinations = []
@@ -163,8 +167,8 @@ def get_dataframe(centroid_id): # Crée un dataframe pour chaque centroïde cont
 def dataframe(centroid_id): # Sauvegarde le dataframe dans un fichier.
     print("Saving the dataframe to a file...")
     c, c_infos = get_dataframe(centroid_id)
-    path_centroids = os.path.normpath("./Results/h_{}_min/centroid_{}.txt".format(int(h/60), centroid_id))
-    path_centroids_info = os.path.normpath("./Results/h_{}_min/centroid_{}_infos.txt".format(int(h/60), centroid_id))
+    path_centroids = os.path.normpath("./Results/h_{}_min_{}DRT/centroid_{}.txt".format(int(h/60), nb_DRT, centroid_id))
+    path_centroids_info = os.path.normpath("./Results/h_{}_min_{}DRT/centroid_{}_infos.txt".format(int(h/60), nb_DRT, centroid_id))
     c.to_csv(path_centroids, index=False)
     c_infos.to_csv(path_centroids_info, index=False)
     del c
@@ -197,12 +201,12 @@ vitesse_walk = Parameters.vitesse_walk*1000/3600
 create_graph()
 
 
-#Création du dossier "h_{}_min".format(int(h/60)) dans Results
+#Création du dossier "h_{}_min_{}DRT".format(int(h/60)) dans Results
 print("Création du dossier 'h_",int(h/60),"_min'")
 
-directory = "h_{}_min".format(int(h/60))
+directory = "h_{}_min_{}DRT".format(int(h/60), nb_DRT)
 dir_path = os.path.join('./Results', directory)
-directory_old = "h_{}_min_old".format(int(h/60))
+directory_old = "h_{}_min_{}DRT_old".format(int(h/60), nb_DRT)
 old_dir_path = os.path.join('./Results', directory_old)
 
 

@@ -70,7 +70,7 @@ print(nb_centroids)
 print(somme_inacc/nb_centroids)
 
 # On associe les accessibilités calculées aux stops :
-path_stops = os.path.normpath('Data/stops.txt')
+path_stops = os.path.normpath('{}/stops.txt'.format(Data))
 stops = pd.read_csv(path_stops)
 
 # Obtenir les identifiants des stops

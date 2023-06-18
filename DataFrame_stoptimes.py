@@ -4,13 +4,16 @@ import numpy as np
 import pandas as pd
 import time
 import os
+import Parameters
+
+Data = Parameters.Data
 
 start_time = time.time()
 #1.35 min
 
-# path_stoptimes = os.path.normpath('./Data/stop_times.txt')
+# path_stoptimes = os.path.normpath('./{}/distances.txt".format(Data)stop_times.txt')
 # stoptimes = pd.read_csv(path_stoptimes)
-# path_trips = os.path.normpath('./Data/trips.txt')
+# path_trips = os.path.normpath('./{}/distances.txt".format(Data)trips.txt')
 # trips = pd.read_csv(path_trips)
 
 # df_routes = []
@@ -27,17 +30,17 @@ start_time = time.time()
 # df['route_id'] = df_routes 
 
 
-path_stoptimes = os.path.normpath('./Data/stop_times.txt')
+path_stoptimes = os.path.normpath('./{}/stop_times.txt'.format(Data))
 stoptimes = pd.read_csv(path_stoptimes)
 
-path_trips = os.path.normpath('./Data/trips.txt')
+path_trips = os.path.normpath('./{}/trips.txt'.format(Data)) 
 trips = pd.read_csv(path_trips)
 
 merged_df = pd.merge(stoptimes, trips[['trip_id', 'route_id']], on='trip_id', how='inner')
 
 df = merged_df[['trip_id', 'arrival_time', 'departure_time', 'stop_id', 'stop_sequence', 'route_id']]
 
-path_df = os.path.normpath("./Data/df.txt")
+path_df = os.path.normpath("./{}/df.txt".format(Data))
 df.to_csv(path_df, index = False) 
 
 end_time = time.time()

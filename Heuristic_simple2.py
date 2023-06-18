@@ -3,6 +3,7 @@ import matplotlib as matplotlib
 import os
 import sys
 import Parameters
+from sklearn.neighbors import NearestNeighbors
 
 '''
 Il faudrait avec une zone de taille $**longueur** x **largeur**$ (paramètres définis dans Parameters) dans laquelle 
@@ -70,7 +71,7 @@ res = pd.read_csv(path_res)
 #print(res.head())
 
 # On associe les accessibilités calculées aux stops :
-path_stops = os.path.normpath('Data/stops.txt')
+path_stops = os.path.normpath('{}/stops.txt'.format(Data))
 stops = pd.read_csv(path_stops)
 
 print(stops.head(0))
@@ -171,10 +172,25 @@ print('couple_min_max_zoneDRT trié : ', couple_min_max_zoneDRT_sorted.head())
 couple_min_max_zoneDRT_choix_DRT = couple_min_max_zoneDRT_sorted.head(nb_DRT)
 
 #placement DRT sans recadrage
-placement_DRT = couple_min_max_zoneDRT_choix_DRT['stop_min'].tolist()
+placement_DRT = []
 
 #placement DRT avec recadrage 
+for i in range(nb_DRT):
+    centre_lon = (couple_min_max_zoneDRT_choix_DRT['lon_max'].iloc[i] + couple_min_max_zoneDRT_choix_DRT['lon_min'].iloc[i])/2
+    centre_lat = (couple_min_max_zoneDRT_choix_DRT['lat_max'].iloc[i] + couple_min_max_zoneDRT_choix_DRT['lat_min'].iloc[i])/2
+    # Créer l'arbre k-d avec les points existants
+    # Créer un modèle de recherche des plus proches voisins
+    k = 1  # Nombre de voisins à rechercher (1 dans ce cas pour le point le plus proche)
+    nbrs = NearestNeighbors(n_neighbors=k, algorithm='auto').fit(couple_min_max_zoneDRT[['lon_min', 'lat_min']])
 
+    # Rechercher le point le plus proche du nouveau point
+    distances, indices = nbrs.kneighbors([[centre_lat, centre_lon]])
+    index = indices.flatten()[0]
+    # Obtenir la valeur de stop_min du point le plus proche
+    stop_centre_id = couple_min_max_zoneDRT_sorted.loc[index, 'stop_min']
+
+    print("Valeur de stop_min du point le plus proche :", stop_centre_id)
+    placement_DRT.append(stop_centre_id)
 
 #################################################################################
 # Mettre ces résultats dans le fichier à la ligne n° nb_DRT

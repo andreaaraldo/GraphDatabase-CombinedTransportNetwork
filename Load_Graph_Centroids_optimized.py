@@ -5,9 +5,13 @@ import pandas as pd
 from neo4j import GraphDatabase
 import time
 import os
+import Parameters
+
+Data = Parameters.Data
 
 URI = "bolt://127.0.0.1:7687"
 USER = "neo4j"
+#USER = "neo4j_test"
 PASSWORD = "cassiopeedrt"
 driver = GraphDatabase.driver(URI, auth=(USER, PASSWORD))
 # driver = GraphDatabase.driver(URI)
@@ -20,7 +24,6 @@ def execute(driver, query):
         if len(query) > 0:
             result = session.run(query)
             return result   
-
 
 
 """
@@ -36,6 +39,8 @@ dbms.directories.import=import
 
 4.Restart Neo4j
 """
+curr_directory = os.getcwd() #get current directory i.e GraphDatabase-combinedtransportnetworks
+print(curr_directory)
 
 def import_using_load_csv():
 
@@ -57,7 +62,7 @@ def import_using_load_csv():
 
     #add the stops
     print("Adding stops..\n\n")
-    path_stops = os.path.normpath("{}/Data/stops.txt".format(curr_directory))
+    path_stops = os.path.normpath("{}/{}/stops.txt".format(curr_directory, Data))
     
     query="""
         LOAD CSV WITH HEADERS FROM 'file:///{}' AS row
@@ -76,7 +81,7 @@ def import_using_load_csv():
  
     #add the Stoptimes and add relationship "Located at" with attribut inter_time=0
     print("Adding Stoptimes and Relationship LOCATED AT ..\n\n")
-    path_df = os.path.normpath("{}/Data/df.txt".format(curr_directory))
+    path_df = os.path.normpath("{}/{}/df.txt".format(curr_directory, Data))
     query = """
         using periodic commit
         LOAD CSV WITH HEADERS FROM 'file:///"""+path_df+"""' AS row
@@ -120,7 +125,7 @@ def import_using_load_csv():
 
     print('Add centroids and relations WALK..\n\n')
     #add centroids and relationship WALK
-    path_centroids=os.path.normpath("{}/Data/centroids.txt".format(curr_directory))
+    path_centroids=os.path.normpath("{}/{}/centroids.txt".format(curr_directory, Data))
     query="""
         LOAD CSV WITH HEADERS FROM 'file:///"""+path_centroids+"""' AS row
         MERGE (c:Centroid {centroid_id: toInteger(row.centroid_id)})
@@ -156,10 +161,10 @@ def import_using_load_csv():
 
 
 ########################################################################
-path_stops = os.path.normpath("./Data/stops.txt")
+path_stops = os.path.normpath("./{}/stops.txt".format(Data))
 stops = pd.read_csv(path_stops)
 
-path_centroids = os.path.normpath("./Data/centroids.txt")
+path_centroids = os.path.normpath("./{}/centroids.txt".format(Data))
 centroids = pd.read_csv(path_centroids)
 
 start_time = time.time()

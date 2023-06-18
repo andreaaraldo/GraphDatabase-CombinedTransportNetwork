@@ -12,14 +12,18 @@ from shapely.geometry import Polygon
 import numpy as np
 import time
 import os
+import Parameters
+
+Data = Parameters.Data
 
 start_time = time.time()
 
 geod = Geodesic.WGS84
 
 # Importe 'stops.txt' & cree les points limites
-path_stops = os.path.normpath('./Data/stops.txt')
-stops = pd.read_csv(path_stops) # stops = pd.read_csv(r'Data/stops.txt') for mac and linux
+
+path_stops = os.path.normpath('./{}/stops.txt'.format(Data))
+stops = pd.read_csv(path_stops) # stops = pd.read_csv(r'{}/stops.txt'.format(Data)) for mac and linux
 min_lat = min(stops.stop_lat) # Coordonnées limites des stops
 max_lat = max(stops.stop_lat)
 min_lon = min(stops.stop_lon)
@@ -77,7 +81,7 @@ centroids_pos = pd.DataFrame()
 centroids_pos['centroid_id'] = centroids_coord.centroid_id
 centroids_pos['longitude'] = [centroids0[i].x for i in range(len(centroids0))]
 centroids_pos['latitude'] = [centroids0[i].y for i in range(len(centroids0))]
-path_pos_centroids = os.path.normpath('./Data/pos_centroids.txt')
+path_pos_centroids = os.path.normpath('./{}/pos_centroids.txt'.format(Data))
 centroids_pos.to_csv(path_pos_centroids, index = False) # fichier 'pos_s=centroids.txt'
 
 # Stops
@@ -94,7 +98,7 @@ stations_pos['stop_id'] = stations_coord.stop_id
 stations_pos['longitude'] = [stations_coord.station[i].x for i in range(len(stations_coord))]
 stations_pos['latitude'] = [stations_coord.station[i].y for i in range(len(stations_coord))]
 
-path_pos_stations = os.path.normpath('./Data/pos_stations.txt')
+path_pos_stations = os.path.normpath('./{}/pos_stations.txt'.format(Data))
 stations_pos.to_csv(path_pos_stations, index = False) # fichier 'pos_s=centroids.txt'
 
 # Distances Centroid-Stop
@@ -117,7 +121,7 @@ tab['centroid_id'] = [i for i in index_centroid]
 tab['distance'] = distance
 tab['stop_id'] = [i for i in index_station]
 
-path_distances = os.path.normpath('./Data/distances.txt')
+path_distances = os.path.normpath('./{}/distances.txt'.format(Data))
 tab.to_csv(path_distances, index = False) # Fichier 'distances.txt'
 
 end_time = time.time()

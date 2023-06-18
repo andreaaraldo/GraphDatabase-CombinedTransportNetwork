@@ -5,16 +5,19 @@ import pandas as pd
 import Parameters
 import time
 import os
+import Parameters
+
+Data = Parameters.Data
 
 start_time = time.time()
 
-path_distances = os.path.normpath('./Data/distances.txt')
+path_distances = os.path.normpath('./{}/distances.txt'.format(Data))
 distances = pd.read_csv(path_distances)
 
-path_pos_centroids = os.path.normpath('./Data/pos_centroids.txt')
+path_pos_centroids = os.path.normpath('./{}/pos_centroids.txt'.format(Data))
 pos_centroids = pd.read_csv(path_pos_centroids)
 
-path_pos_stations = os.path.normpath('./Data/pos_stations.txt')
+path_pos_stations = os.path.normpath('./{}/pos_stations.txt'.format(Data))
 pos_stations = pd.read_csv(path_pos_stations)
 
 rayon_exclusif = Parameters.rayon_exclusif
@@ -82,7 +85,7 @@ centroid_vf = pd.DataFrame({
     'walking_time': round(centr['distance'] / vitesse_walk, 3)
 })
 
-path_centroids = os.path.normpath('./Data/centroids.txt')
+path_centroids = os.path.normpath('./{}/centroids.txt'.format(Data))
 centroid_vf.to_csv(path_centroids, index = False) # Fichier 'centroids.txt'
 
 end_time = time.time()
