@@ -147,7 +147,7 @@ def create(stop_id):
 
 ###############################################################################
 stops_path = os.path.normpath("./{}/stops.txt".format(Data))
-pos_centroids_path = os.path.normpath("./Data/pos_centroids.txt")
+pos_centroids_path = os.path.normpath("./{}/pos_centroids.txt".format(Data))
 stops = pd.read_csv(stops_path)
 pos_centroids = pd.read_csv(pos_centroids_path)
 stations = get_stations_df()
