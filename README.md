@@ -92,19 +92,19 @@ Please annotate the url showed in the Connection Status of neo4j and report it t
 
 Ne pas mettre d'accents ou caractères spéciaux dans le path.
 
-"""
-in order to use load_csv with local files, make sure to do as follows:
 
-1.Find the neo4j.conf file for your Neo4j installation.
+To use load_csv with local files, make sure to do as follows:
 
-2.Comment this line(By adding # in the start):
+**1.**Find the neo4j.conf file for your Neo4j installation.
+
+**2.** Comment this line(By adding # in the start):
 dbms.directories.import=import
 
-3.Uncomment this line to allow CSV import from file URL:
+**3.** Uncomment this line to allow CSV import from file URL:
 #dbms.security.allow_csv_import_from_file_urls=true
 
-4.Restart Neo4j
-"""
+**4.** Restart Neo4j
+
 
 Ce fichier crée la base du graphe dans Neo4j, c'est-à-dire le réseau à partir des données GTFS + les noeuds Centroids et leurs relations WALK avec des Stoptimes. This script may take some time. You will see in neo4j that nodes are being added during the process (check "Node labels" on the left of the neo4j interface").
 
@@ -123,7 +123,7 @@ Cette modification est à effectuer avant les étapes suivantes.
 ### 9°) Plus-court-chemins (PCC) :
 - Modifier les valeurs des rayons délimitant la zone à partir d'un centoïde à laquelle doit appartenir une station pour être une destination : **ray_min** et **ray_max** dans le fichier **Parameters.py**.
 - Exécuter le fichier **PCC_totaltimes_DataFrames.py**
-Ce fichier trouve les PCC entre centroïdes (origine) et stations (destinations). Il récupère des informations sur ces PCC et les regroupe dans un dataframe. Il y a un dataframe par origine (centroïde) : **centroid_{centroid_id}.txt** dans le dossier **Results/h_{valeur de h en minute}_min**. Si il n'y a pas de chemin trouvé dans le graphe, on considère que l'on se rend à la destination directement à pieds (vol d'oiseau).
+Ce fichier trouve les PCC entre centroïdes (origine) et stations (destinations). Il récupère des informations sur ces PCC et les regroupe dans un dataframe. Il y a un dataframe par origine (centroïde) : **centroid_{centroid_id}.txt** dans le dossier **Results_{Data}/h_{valeur de h en minute}_min**. Si il n'y a pas de chemin trouvé dans le graphe, on considère que l'on se rend à la destination directement à pieds (vol d'oiseau).
 
 ### 10°) Résultats :
 Exécuter le fichier **Res_DataFrames.py**. Ce fichier résume les résultats précédemment obtenus pour chaque centroïde dans un fichier **res_{valeur de h en minute}_min.txt**. In this file, we have one line per each centroid, with the indication of the accessibiliy value (as computed in [our article](https://arxiv.org/abs/2210.08327)).

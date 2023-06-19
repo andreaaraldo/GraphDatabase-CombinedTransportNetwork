@@ -8,8 +8,12 @@ import shutil
 
 URI = "bolt://127.0.0.1:7687"
 USER = "neo4j"
+#USER = "neo4j_test"
 PASSWORD = "cassiopeedrt"
 driver = GraphDatabase.driver(URI, auth=(USER, PASSWORD))
+
+nb_DRT = Parameters.nb_DRT
+Data = Parameters.Data
 
 def execute(driver, query): # Exécute une requête Cypher
     """Execute a query."""
@@ -27,12 +31,11 @@ def get_res(driver, query): # Récupère le return d'un requête Cypher.
 
 def create_graph(): # Sauvegarde le graphe actuel.
     graph = "graphe_{}".format(int(h/60))
-    #query = "CALL gds.graph.create('{}',".format(graph)     #version No4j 4.0
-    query = "CALL gds.graph.project('{}',".format(graph)     #version No4j 5.5
+    query = "CALL gds.graph.create('{}',".format(graph)     #version No4j 4.0
     query += " '*', '*',{relationshipProperties: 'inter_time'})"
     execute(driver, query)
     
-def shortest_path_old(source_id, target_id): # Cherche le PCC d'une source à une target et retourne le coût (temps en secondes) total du PCC.
+def shortest_path(source_id, target_id): # Cherche le PCC d'une source à une target et retourne le coût (temps en secondes) total du PCC.
     query = "MATCH (source:Centroid), (target:Stop) WHERE source.centroid_id = {} AND target.stop_id = {} \n".format(source_id, target_id)
     query += "CALL gds.shortestPath.dijkstra.stream('graphe_{}',".format(int(h/60))
     query += "{sourceNode: id(source), targetNode: id(target), relationshipWeightProperty: 'inter_time'}) \n"
@@ -41,29 +44,17 @@ def shortest_path_old(source_id, target_id): # Cherche le PCC d'une source à un
     query += "RETURN a.stop_id as from, type(rel) as types, b.stop_id as to, rel.inter_time AS inter_times, rel.walking_time AS walking_time, rel.waiting_time AS waiting_DRT, rel.travel_time AS DRT_time, totalCost AS totaltime"
     return query
 
-def shortest_path(source_id, target_id):
-    with driver.session() as session:
-        query = "MATCH (source:Centroid), (target:Stop) WHERE source.centroid_id = {} AND target.stop_id = {} \n".format(source_id, target_id)
-        query += "CALL gds.shortestPath.dijkstra.stream('graphe_{}',".format(int(h/60))
-        query += "{sourceNode: id(source), targetNode: id(target), relationshipWeightProperty: 'inter_time'}) \n"
-        query += "YIELD sourceNode, targetNode, totalCost, nodeIds, costs, path \n"
-        query += "CALL apoc.algo.cover(nodeIds) YIELD rel WITH startNode(rel) as a, endNode(rel) as b, rel as rel, path AS path, totalCost as totalCost \n"
-        query += "RETURN a.stop_id as from, type(rel) as types, b.stop_id as to, rel.inter_time AS inter_times, rel.walking_time AS walking_time, rel.waiting_time AS waiting_DRT, rel.travel_time AS DRT_time, totalCost AS totaltime"
-
-        result = session.run(query)
-        return [dict(i) for i in result]
-
 def get_transport(res):
-    a = 0
     trsp = []
     for r in res:
         if (r['types'] == 'DRT') or (r['types'] == 'WALK'):
             trsp.append(r['types'])
-            a += 1
-    if a == 2:
+    if len(trsp) == 2:
         transport = 'DRT/WALK'
-    else:
+    elif len(trsp) == 1:
         transport = trsp[0]
+    else:
+        transport = 'None'
     return transport
 
 def get_correspondance_nbr(res):
@@ -95,9 +86,9 @@ def get_times_first_station(res):
     return intertime, walking_time, waiting_time, DRT_time
 
 def get_dataframe(centroid_id): # Crée un dataframe pour chaque centroïde contenant les destinations, le coût total du PCC associé, et le temps de trajet direct à pieds (vol d'oiseau).
-    path_distances = os.path.normpath("./Data/distances.txt")
+    path_distances = os.path.normpath("./{}/distances.txt".format(Data))
     distances = pd.read_csv(path_distances)
-    path_stops = os.path.normpath("./Data/stops.txt")
+    path_stops = os.path.normpath("./{}/stops.txt".format(Data))
     stops = pd.read_csv(path_stops)
     distance = pd.DataFrame([distances.iloc[i, [1, 2]] for i in np.where(distances.centroid_id == centroid_id)[0]])
     destinations = []
@@ -170,8 +161,8 @@ def get_dataframe(centroid_id): # Crée un dataframe pour chaque centroïde cont
 def dataframe(centroid_id): # Sauvegarde le dataframe dans un fichier.
     print("Saving the dataframe to a file...")
     c, c_infos = get_dataframe(centroid_id)
-    path_centroids = os.path.normpath("./Results/h_{}_min_all/centroid_{}.txt".format(int(h/60), centroid_id))
-    path_centroids_info = os.path.normpath("./Results/h_{}_min_all/centroid_{}_infos.txt".format(int(h/60), centroid_id))
+    path_centroids = os.path.normpath("./Results_{}/h_{}_min_{}DRT_all/centroid_{}.txt".format(Data, int(h/60), nb_DRT, centroid_id))
+    path_centroids_info = os.path.normpath("./Results_{}/h_{}_min_{}DRT_all/centroid_{}_infos.txt".format(Data, int(h/60), nb_DRT, centroid_id))
     c.to_csv(path_centroids, index=False)
     c_infos.to_csv(path_centroids_info, index=False)
     del c
@@ -189,9 +180,8 @@ print("Number of hours : ", h/60)
 ###############################################################################
 # Gestion de dossiers 
 ###############################################################################
-
 # id des centroides pour lesquelles on calcule l'accessibilite
-path_ids_all = os.path.normpath("./Results/ids_all.txt")
+path_ids_all = os.path.normpath("./Results_{}/ids_all.txt".format(Data))
 
 #création de ids_all
 if not os.path.isdir(path_ids_all):
@@ -208,7 +198,6 @@ print("centroid_id : ", centr)
 ###############################################################################
 #Calcul de PCC
 ###############################################################################
-
 # Vitesse de marche
 vitesse_walk = Parameters.vitesse_walk*1000/3600
 
@@ -216,26 +205,24 @@ vitesse_walk = Parameters.vitesse_walk*1000/3600
 create_graph()
 
 
-#Création du dossier "h_{}_min".format(int(h/60)) dans Results
-print("Création du dossier 'h_", int(h/60), "_min'")
+#Création du dossier "h_{}_min_{}DRT".format(int(h/60), nb_DRT) dans Results
+print("Création du dossier 'h_", int(h/60), "_min")
 
-directory = "h_{}_min_all".format(int(h/60))
-dir_path = os.path.join('./Results', directory)
-directory_old = "h_{}_min_all_old".format(int(h/60))
-old_dir_path = os.path.join('./Results', directory_old)
+directory = "h_{}_min_{}DRT_all".format(int(h/60), nb_DRT)
+dir_path = os.path.join('./Results_{}'.format(Data), directory)
+directory_old = "h_{}_min_{}DRT_all_old".format(int(h/60), nb_DRT)
+old_dir_path = os.path.join('./Results_{}'.format(Data), directory_old)
 
 
 #Si le dossier existe, alors on le renome _old et on supprime l'historique
 if os.path.isdir(dir_path):
-    print(1)
     #on supprime l'historique s'il existe
-    if os.path.isdir(os.path.join("./Results", directory_old)):
-        print(2)
+    if os.path.isdir(os.path.join('./Results_{}'.format(Data), directory_old)):
         shutil.rmtree(old_dir_path)
     #on renome le dossier pour le placer dans l'historique
     os.rename(dir_path, old_dir_path)
 
-dir_path_new = os.path.join('./Results', directory)
+dir_path_new = os.path.join('./Results_{}'.format(Data), directory)
 os.mkdir(dir_path_new)
 
 # PCC et sauvegarde les temps totaux

@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-import neo4j
 from neo4j import GraphDatabase
 import time
 import os
@@ -12,6 +11,9 @@ USER = "neo4j"
 #USER = "neo4j_test"
 PASSWORD = "cassiopeedrt"
 driver = GraphDatabase.driver(URI, auth=(USER, PASSWORD))
+
+nb_DRT = Parameters.nb_DRT
+Data = Parameters.Data
 
 def execute(driver, query): # Exécute une requête Cypher
     """Execute a query."""
@@ -41,7 +43,6 @@ def shortest_path(source_id, target_id): # Cherche le PCC d'une source à une ta
     query += "CALL apoc.algo.cover(nodeIds) YIELD rel WITH startNode(rel) as a, endNode(rel) as b, rel as rel, path AS path, totalCost as totalCost \n"
     query += "RETURN a.stop_id as from, type(rel) as types, b.stop_id as to, rel.inter_time AS inter_times, rel.walking_time AS walking_time, rel.waiting_time AS waiting_DRT, rel.travel_time AS DRT_time, totalCost AS totaltime"
     return query
-
 
 def get_transport(res):
     trsp = []
@@ -83,8 +84,6 @@ def get_times_first_station(res):
             walking_time = r['walking_time']
         
     return intertime, walking_time, waiting_time, DRT_time
-
-
 
 def get_dataframe(centroid_id): # Crée un dataframe pour chaque centroïde contenant les destinations, le coût total du PCC associé, et le temps de trajet direct à pieds (vol d'oiseau).
     distance = distances[distances['centroid_id'] == centroid_id][['distance', 'stop_id']].reset_index(drop=True)
@@ -171,8 +170,6 @@ start_time = time.time()
 
 ray_max = Parameters.ray_max
 ray_min = Parameters.ray_min
-nb_DRT = Parameters.nb_DRT
-Data = Parameters.Data
 h = Parameters.h
 print("Number of hours : ", h/60)
 
@@ -188,7 +185,6 @@ path_distances = os.path.normpath("./{}/distances.txt".format(Data))
 distances = pd.read_csv(path_distances)
 path_stops = os.path.normpath("./{}/stops.txt".format(Data))
 stops = pd.read_csv(path_stops)
-
 ###############################################################################
 #Calcul de PCC
 ###############################################################################
@@ -200,23 +196,23 @@ create_graph()
 
 
 #Création du dossier "h_{}_min_{}DRT".format(int(h/60), nb_DRT) dans Results
-print("Création du dossier 'h_",int(h/60),"_min'")
+print("Création du dossier 'h_", int(h/60), "_min")
 
 directory = "h_{}_min_{}DRT".format(int(h/60), nb_DRT)
-dir_path = os.path.join('./Results', directory)
+dir_path = os.path.join('./Results_{}'.format(Data), directory)
 directory_old = "h_{}_min_{}DRT_old".format(int(h/60), nb_DRT)
-old_dir_path = os.path.join('./Results', directory_old)
+old_dir_path = os.path.join('./Results_{}'.format(Data), directory_old)
 
 
 #Si le dossier existe, alors on le renome _old et on supprime l'historique
 if os.path.isdir(dir_path):
     #on supprime l'historique s'il existe
-    if os.path.isdir(os.path.join("./Results", directory_old)):
+    if os.path.isdir(os.path.join('./Results_{}'.format(Data), directory_old)):
         shutil.rmtree(old_dir_path)
     #on renome le dossier pour le placer dans l'historique
     os.rename(dir_path, old_dir_path)
 
-dir_path_new = os.path.join('./Results', directory)
+dir_path_new = os.path.join('./Results_{}'.format(Data), directory)
 os.mkdir(dir_path_new)
 
 # PCC et sauvegarde les temps totaux
@@ -227,5 +223,4 @@ for c in centr:
 end_time = time.time()
 print("Temps d'exécution :", end_time - start_time)
 print((end_time - start_time)/60, 'minutes')
-
 #15-20 min

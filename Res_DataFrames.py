@@ -56,7 +56,6 @@ def get_walk_to_drt(drt, station_drt):
             walk_to_drt.append(station_drt[i]-drt[i])
     return walk_to_drt
 
-
 def df_res(centroid_ids):
     df = pd.DataFrame()
     centroid_id = []  # id des centroides pouvant prendre le DRT
@@ -136,10 +135,10 @@ h_str = Parameters.h_str
 ########################################################################
 res_path = os.path.normpath("./Results_{}/res".format(Data))
 
+##Gestion de l'historique 
 if not os.path.exists(res_path):
     # Crée le dossier 'res' s'il n'existe pas
     os.mkdir(res_path)
-
 
 ########################################################################
 directory_res = "res_{}_{}DRT.txt".format(h_str, nb_DRT)
@@ -149,13 +148,12 @@ old_dir_path = os.path.join("./Results_{}/res".format(Data), old_directory_res)
 
 #Si le dossier res existe, alors on le renome _old et on supprime l'historique
 if os.path.exists(dir_path):
-    print(1)
     #on supprime l'historique s'il existe
     if os.path.exists(old_dir_path):
         os.remove(old_dir_path)
-        print(2)
     #on renome le dossier pour le placer dans l'historique
     os.rename(dir_path, old_dir_path)
+##Fin de gestion de l'historique 
 ########################################################################
 
 path = os.path.normpath("./Results_{}/ids.txt".format(Data, h_str))

@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-import neo4j
 from neo4j import GraphDatabase
 import time
 import os
@@ -25,23 +24,18 @@ def execute(driver, query): # Exécute une requête Cypher
 
 def get_res(driver, query): # Récupère le return d'un requête Cypher.
     """Execute a query."""
-    start_time_gr = time.time()
     with driver.session() as session:
         if len(query) > 0:
             result = session.run(query)
         return [dict(i) for i in result]
-    end_time_gr = time.time()
-    print('get_res : ', start_time_gr - end_time_gr)
 
 def create_graph(): # Sauvegarde le graphe actuel.
     graph = "graphe_{}".format(int(h/60))
     query = "CALL gds.graph.create('{}',".format(graph)     #version No4j 4.0
-    #query = "CALL gds.graph.project('{}',".format(graph)     #version No4j 5.5
     query += " '*', '*',{relationshipProperties: 'inter_time'})"
     execute(driver, query)
     
 def shortest_path(source_id, target_id): # Cherche le PCC d'une source à une target et retourne le coût (temps en secondes) total du PCC.
-    start_time_sp = time.time()
     query = "MATCH (source:Centroid), (target:Stop) WHERE source.centroid_id = {} AND target.stop_id = {} \n".format(source_id, target_id)
     query += "CALL gds.shortestPath.dijkstra.stream('graphe_{}',".format(int(h/60))
     query += "{sourceNode: id(source), targetNode: id(target), relationshipWeightProperty: 'inter_time'}) \n"
@@ -205,20 +199,20 @@ create_graph()
 print("Création du dossier 'h_",int(h/60),"_min'")
 
 directory = "h_{}_min_{}DRT".format(int(h/60), nb_DRT)
-dir_path = os.path.join('./Results', directory)
+dir_path = os.path.join('./Results_{}'.format(Data), directory)
 directory_old = "h_{}_min_{}DRT_old".format(int(h/60), nb_DRT)
-old_dir_path = os.path.join('./Results', directory_old)
+old_dir_path = os.path.join('./Results_{}'.format(Data), directory_old)
 
 
 #Si le dossier existe, alors on le renome _old et on supprime l'historique
 if os.path.isdir(dir_path):
     #on supprime l'historique s'il existe
-    if os.path.isdir(os.path.join("./Results", directory_old)):
+    if os.path.isdir(os.path.join('./Results_{}'.format(Data), directory_old)):
         shutil.rmtree(old_dir_path)
     #on renome le dossier pour le placer dans l'historique
     os.rename(dir_path, old_dir_path)
 
-dir_path_new = os.path.join('./Results', directory)
+dir_path_new = os.path.join('./Results_{}'.format(Data), directory)
 os.mkdir(dir_path_new)
 
 # PCC et sauvegarde les temps totaux

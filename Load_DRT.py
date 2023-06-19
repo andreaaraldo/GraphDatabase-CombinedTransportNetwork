@@ -9,6 +9,7 @@ from pyproj import Geod
 from shapely.geometry import Polygon, LineString, Point
 import Parameters
 import os
+import shutil
 
 nb_DRT = Parameters.nb_DRT
 Data = Parameters.Data
@@ -38,7 +39,7 @@ def get_stations_df():
 #id_station: L'identifiant de la station pour laquelle les opérations de visualisation doivent être effectuées.
 #show: Un booléen indiquant si les parcelles et les annotations doivent être affichées.
 #show_choose: Un booléen indiquant si les parcelles de sélection doivent être affichées.
-def choose(id_station, show, show_choose): 
+def choose(id_station, show): 
     station = stations.iloc[np.where(stations.stop_id == id_station)[0][0]]
     A = Point(station.station.x, station.station.y) # Les coordonnées de la station.
     L = Point(A.x - 0.051408, A.y)                  # Le point situé à gauche de la station.
@@ -49,9 +50,12 @@ def choose(id_station, show, show_choose):
     DL = Point(L.x,D.y)
     UR = Point(R.x,U.y)
     DR = Point(R.x,D.y)
+    print("\n \n \n \n \n \n pos_centroids : ", pos_centroids, "\n \n \n \n \n \n ")
     # filtre les données du DataFrame pos_centroids pour récupérer les centroides qui se trouvent à gauche et à droite de la station, en fonction de leurs coordonnées :
     centroids_left = pos_centroids.iloc[np.where((pos_centroids.longitude > L.x) & (pos_centroids.longitude < A.x) & (pos_centroids.latitude < U.y) & (pos_centroids.latitude > D.y))]
+    print("\n \n \n \n \n \n Centroids_left : ", centroids_left)
     centroids_right = pos_centroids.iloc[np.where((pos_centroids.longitude < R.x) & (pos_centroids.longitude > A.x) & (pos_centroids.latitude < U.y) & (pos_centroids.latitude > D.y))]
+    print("Centroids_right : ", centroids_right, "\n \n \n \n \n \n ")
     if show == True:
         fig, ax = plt.subplots()
         ax.scatter([L.x,R.x,U.x,D.x,UL.x,DL.x,UR.x,DR.x], [L.y,R.y,U.y,D.y,UL.y,DL.y,UR.y,DR.y])
@@ -80,11 +84,14 @@ def show_choose(station_list):
     for i in station_list:
         station = stations.iloc[np.where(stations.stop_id == i)[0][0]]
         plt.scatter(station.station.x, station.station.y, c = 'black')
-    plt.title("Stations")
+    plt.title("Stations (fonction choose)")
     plt.xlabel("Longitude", fontsize = 16)
     plt.ylabel("Latitude", fontsize = 16)
+    path_save_fig = os.path.normpath("./Results_{}/Stations.png".format(Data))
+    plt.savefig(path_save_fig, format = 'png') 
+    #plt.savefig(r"./Results/Stations.svg", format = 'svg') 
     plt.show()
-    #plt.savefig(r".\Results\Stations.svg", format = 'svg') 
+    plt.close()
 
 # DRT
 def pax(densite, longueur, largeur, h):
@@ -125,7 +132,7 @@ def get_res(driver, query):
     
 def create(stop_id):
     print(stop_id, ':')
-    left, _ = choose(stop_id, show = True, show_choose = False)
+    left, _ = choose(stop_id, show = True)
     df_centroids = pd.DataFrame()
     df_centroids['centroid_id'] = left.centroid_id
     df_centroids['longitude'] = left.longitude
@@ -145,6 +152,15 @@ def create(stop_id):
 
 
 ###############################################################################
+# On crée le fichier Results_{Data} s'il n'existe pas
+###############################################################################
+rep_Results = os.path.normpath('./Results_{}'.format(Data))
+
+#si le dossier n'existe pas, on le crée :
+if not os.path.isdir(rep_Results):
+    os.mkdir(rep_Results)
+###############################################################################
+
 stops_path = os.path.normpath("./{}/stops.txt".format(Data))
 pos_centroids_path = os.path.normpath("./{}/pos_centroids.txt".format(Data))
 stops = pd.read_csv(stops_path)
@@ -188,6 +204,8 @@ liste_stat.to_csv(path_list_station, index = False)
 stat = pd.read_csv(path_list_station)
 station_list = np.sort([i for i in liste_stations])
 
+print("station_list : ", station_list)
+
 show_choose(station_list)
 
 query = "MATCH ()-[r:DRT]-() DELETE r"
@@ -198,14 +216,15 @@ ids_centroids = []
 for i in station_list:
     print("Station :", i)
     create(i)
-    path_ids_centroids = os.path.normpath(".\Stations\id_centroid_station_{}.txt".format(i))
+    path_ids_centroids = os.path.normpath("./Stations/id_centroid_station_{}.txt".format(i))
     ids_centr = pd.read_csv(path_ids_centroids).centroid_id.values
     for j in ids_centr:
         ids_centroids.append(j)
 df_centr_ids = pd.DataFrame()
 df_centr_ids['centroid_id'] = np.unique(ids_centroids)
+print(df_centr_ids.head())
 
-path_ids = os.path.join('./Results', 'ids.txt')
+path_ids = os.path.join('./Results_{}'.format(Data), 'ids.txt')
 df_centr_ids.to_csv(path_ids, index = False)
     
 # create_graph()

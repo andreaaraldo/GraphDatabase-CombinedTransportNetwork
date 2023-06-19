@@ -69,7 +69,12 @@ for i in range(len(stops_filtered)):
     plt.annotate(stops_filtered['stop_id'][i], xy=(stops_filtered['stop_lon'][i], stops_filtered['stop_lat'][i]), textcoords='offset points', xytext=(0,5), ha='center', fontweight='bold')
 plt.legend()
 plt.title('Inaccessibilité pour {}DRT \n Moyenne inaccessibilitée = {:.2f}'.format(nb_DRT, inacc_moy))
+
+path_save_fig = os.path.normpath("./Results_{}/Inaccessibilite.png".format(Data))
+plt.savefig(path_save_fig, format = 'png') 
+#plt.savefig(r"./Results/Stations.svg", format = 'svg') 
 plt.show()
+plt.close()
 
 
 
@@ -109,4 +114,9 @@ for i in range(len(stops_filtered)):
     plt.annotate(stops_filtered['stop_id'][i], xy=(stops_filtered['stop_lon'][i], stops_filtered['stop_lat'][i]), textcoords='offset points', xytext=(0,5), ha='center', fontweight='bold')
 plt.legend()
 plt.title('Accessibilité pour {}DRT \n Moyenne accessibilitée = {:.2f}'.format(nb_DRT, inacc_moy))
+
+path_save_fig = os.path.normpath("./Results_{}/Accessibilite.png".format(Data))
+plt.savefig(path_save_fig, format = 'png') 
+#plt.savefig(r"./Results/Stations.svg", format = 'svg') 
 plt.show()
+plt.close()

@@ -43,6 +43,7 @@ Ville = Polygon([point_up_left, point_up_right, point_down_right, point_down_lef
 plt.scatter(stops.stop_lon, stops.stop_lat)
 plt.plot(*Ville.exterior.xy)
 plt.show()
+plt.close()
 
 # Cree pavage (polygones)
 lon = (max_lon - min_lon)/int(np.floor(largeur))
@@ -66,7 +67,13 @@ plt.scatter(stops.stop_lon, stops.stop_lat)
 ## Centoids of polygons on Royan
 plt.scatter(stops.stop_lon, stops.stop_lat)
 plt.scatter([polygons[i].centroid.x for i in range(len(polygons))], [polygons[i].centroid.y for i in range(len(polygons))], marker = '.')
+
+# Enregistrer le graph
+path_save_fig = os.path.normpath("./Results_{}/Centroids.png".format(Data))
+plt.savefig(path_save_fig, format = 'png') 
+#plt.savefig(r"./Results/Stations.svg", format = 'svg') 
 plt.show()
+plt.close()
 
 # Centroids
 centroids0 = []
