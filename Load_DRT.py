@@ -10,15 +10,16 @@ from shapely.geometry import Polygon, LineString, Point
 import Parameters
 import os
 import shutil
+import sys
 
 nb_DRT = Parameters.nb_DRT
 Data = Parameters.Data
 
 def create_graph():
     graph = "graphe_{}".format(int(h/60))
-    #query = "CALL gds.graph.create('{}',".format(graph)    #version No4j 4.0
-    query = "CALL gds.graph.project('{}',".format(graph)     #version No4j 5.5
+    query = "CALL gds.graph.create('{}',".format(graph)    #version No4j 4.0
     query += " '*', '*',{relationshipProperties: 'inter_time'})"
+    print("\n \n \n creation query", query)
     execute(driver, query)
     
 def delete_graph(h_min):
@@ -40,7 +41,14 @@ def get_stations_df():
 #show: Un booléen indiquant si les parcelles et les annotations doivent être affichées.
 #show_choose: Un booléen indiquant si les parcelles de sélection doivent être affichées.
 def choose(id_station, show): 
-    station = stations.iloc[np.where(stations.stop_id == id_station)[0][0]]
+    # mettre une exception
+    try:
+        station = stations.iloc[np.where(stations.stop_id == id_station)[0][0]]
+    except IndexError:
+        print("Erreur : Station n°",id_station, "non trouvée.")
+        sys.exit()
+
+    #station = stations.iloc[np.where(stations.stop_id == id_station)[0][0]]
     A = Point(station.station.x, station.station.y) # Les coordonnées de la station.
     L = Point(A.x - 0.051408, A.y)                  # Le point situé à gauche de la station.
     R = Point(A.x + 0.051408, A.y)                  # Le point situé à droite de la station.
@@ -82,6 +90,13 @@ def choose(id_station, show):
 def show_choose(station_list):
     plt.scatter([stations.iloc[i].station.x for i in range(len(stations))],[stations.iloc[i].station.y for i in range(len(stations))], c = 'silver')
     for i in station_list:
+        #exception :
+        try:
+            station = stations.iloc[np.where(stations.stop_id == i)[0][0]]
+        except IndexError:
+            print("Erreur : Station n°",i, "non trouvée.")
+            sys.exit()
+
         station = stations.iloc[np.where(stations.stop_id == i)[0][0]]
         plt.scatter(station.station.x, station.station.y, c = 'black')
     plt.title("Stations (fonction choose)")
@@ -227,7 +242,7 @@ print(df_centr_ids.head())
 path_ids = os.path.join('./Results_{}'.format(Data), 'ids.txt')
 df_centr_ids.to_csv(path_ids, index = False)
     
-# create_graph()
+create_graph()
 
 end_time = time.time()
 print("temps d'exécution :", end_time - start_time)
