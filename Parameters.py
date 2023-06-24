@@ -4,12 +4,12 @@ import os
 
 nb_DRT = 0
 # indiquer les données qu'on utilise 
-#Data = "Data"
+# Data = "Data"
 Data = "small_instance"
 
 ## Intervenant dans le fichier 'Reduce_Centroid_Stop.py' :
 rayon_exclusif = 6500 # supprime les centroides n'ayant aucune station situee dans ce rayon. In meters
-rayon_walk = 10000000 # cree une relation WALK entre un centroide et les stations situees dans ce rayon. In meters
+rayon_walk = 1000 # cree une relation WALK entre un centroide et les stations situees dans ce rayon. In meters
 departure_time = "'08:30:00'" # horaire de depart pour tous les centroides
 vitesse_walk = 3 # en km/h, vitesse moyenne de marche
 
