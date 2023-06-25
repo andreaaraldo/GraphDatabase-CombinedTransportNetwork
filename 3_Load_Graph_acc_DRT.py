@@ -12,7 +12,7 @@ Data = Parameters.Data
 # Import des données
 ################################################################################
 #Création d'un dataframe avec les résultats calculés
-path_res = os.path.normpath('Results/res/res_1_min_{}DRT.txt'.format(nb_DRT))
+path_res = os.path.normpath('Results_{}/res/res_1_min_{}DRT.txt'.format(Data,nb_DRT))
 res = pd.read_csv(path_res)
 res.head()
 
@@ -57,7 +57,7 @@ plt.scatter(x, y, c=c, alpha=0.5, marker='o', label="Centroids")
 # Ajouter une légende pour la couleur
 plt.colorbar()
 #res_1_min_top10['inaccessibilite']
-plt.scatter(stops['stop_lon'], stops['stop_lat'], c='green', label = 'Stops', alpha = 0.5)
+plt.scatter(stops['stop_lon'], stops['stop_lat'], c='black', label = 'Stops', alpha = 0.5)
 plt.xlabel('Longitude')
 plt.ylabel('Latitude')
 
@@ -97,7 +97,7 @@ plt.scatter(x, y, c=c, alpha=0.5, marker='o', label="Centroids")
 # Ajouter une légende pour la couleur
 plt.colorbar()
 #res_1_min_top10['accessibilite']
-plt.scatter(stops['stop_lon'], stops['stop_lat'], c='green', label = 'Stops', alpha = 0.5)
+plt.scatter(stops['stop_lon'], stops['stop_lat'], c='black', label = 'Stops', alpha = 0.5)
 plt.xlabel('Longitude')
 plt.ylabel('Latitude')
 
@@ -108,5 +108,5 @@ if nb_DRT > 0 :
 for i in range(len(stops_filtered)):
     plt.annotate(stops_filtered['stop_id'][i], xy=(stops_filtered['stop_lon'][i], stops_filtered['stop_lat'][i]), textcoords='offset points', xytext=(0,5), ha='center', fontweight='bold')
 plt.legend()
-plt.title('Accessibilité pour {}DRT \n Moyenne accessibilitée = {:.2f}'.format(nb_DRT, inacc_moy))
+plt.title('Accessibilité pour {}DRT \n Moyenne accessibilitée = {:2f}'.format(nb_DRT, acc_moy))
 plt.show()
