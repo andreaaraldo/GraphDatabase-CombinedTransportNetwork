@@ -4,7 +4,7 @@ import os
 import Parameters
 import time
 
-nb_DRT = Parameters.nb_DRT
+nb_DRT_parameter = Parameters.nb_DRT
 Data = Parameters.Data
 
 def get_nb_DRT(df_centroid):
@@ -71,7 +71,7 @@ def df_res(centroid_ids):
     inaccessibilite=[]  #somme des temps totaux des PCC/nombre centroids
     accessibilite = []  # nombre centroids/somme des temps totaux des PCC
     for id_c in centroid_ids:
-        path = os.path.normpath("./Results_{}/h_{}_all_sansDRT/centroid_{}.txt".format(Data, h_str, id_c))
+        path = os.path.normpath("./Results_{}/h_{}_{}DRT/centroid_{}.txt".format(Data, h_str, nb_DRT_parameter, id_c))
         centroid = pd.read_csv(path)  
         if centroid.empty:
             print(id_c, 'empty')
@@ -80,7 +80,7 @@ def df_res(centroid_ids):
             nb_trajets.append('None')
             nb_trajets_ok.append('None')
             somme.append(0)
-            inaccessibilite.append(0)
+            inaccessibilite.append(float('inf'))
             accessibilite.append(0)
             nb_DRT.append('None')
             nb_DRT_ok.append('None')
@@ -141,9 +141,9 @@ if not os.path.exists(res_path):
     os.mkdir(res_path)
 
 ########################################################################
-directory_res = "res_{}_{}DRT.txt".format(h_str, nb_DRT)
+directory_res = "res_{}_{}DRT.txt".format(h_str, nb_DRT_parameter)
 dir_path = os.path.join("./Results_{}/res".format(Data), directory_res)
-old_directory_res = "res_{}_{}DRT_old.txt".format(h_str, nb_DRT)
+old_directory_res = "res_{}_{}DRT_old.txt".format(h_str, nb_DRT_parameter)
 old_dir_path = os.path.join("./Results_{}/res".format(Data), old_directory_res)
 
 #Si le dossier res existe, alors on le renome _old et on supprime l'historique
@@ -167,7 +167,7 @@ stations = Parameters.liste_stations_DRT
 print("Creating data...")
 data = df_res(centroid_ids)
 print("Done !")
-path_res = os.path.normpath("./Results_{}/res/res_{}_{}DRT.txt".format(Data, h_str, nb_DRT))
+path_res = os.path.normpath("./Results_{}/res/res_{}_{}DRT.txt".format(Data, h_str, nb_DRT_parameter))
 data.to_csv(path_res, index = False)
 
 end_time = time.time()
