@@ -1,0 +1,13 @@
+station dans rayon,station atteintes
+2005,None
+2004,None
+2003,None
+2002,None
+2001,None
+2000,None
+1005,None
+1004,None
+1003,None
+1002,None
+1000,None
+1001,None

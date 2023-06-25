@@ -1,0 +1,4 @@
+station dans rayon,station atteintes
+1009,1009
+1000,None
+1001,None

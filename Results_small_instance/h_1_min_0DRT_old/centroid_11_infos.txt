@@ -1,0 +1,9 @@
+station dans rayon,station atteintes
+2009,2009
+2008,2008
+2007,2007
+2006,2006
+1009,None
+1008,None
+1007,None
+1000,None

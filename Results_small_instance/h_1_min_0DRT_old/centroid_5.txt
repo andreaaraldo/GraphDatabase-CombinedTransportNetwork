@@ -1,0 +1,8 @@
+destination,total_time,transport,correspondance,1st_station,time_to_1st_station,walking_time,drt_time,drt_waiting_time,direct_walk_time
+2009,None,None,None,None,None,None,None,None,3616.4808
+2008,None,None,None,None,None,None,None,None,3233.9939999999997
+2007,None,None,None,None,None,None,None,None,2816.5355999999997
+1003,None,None,None,None,None,None,None,None,2524.1915999999997
+1002,None,None,None,None,None,None,None,None,3198.1463999999996
+1000,None,None,None,None,None,None,None,None,4535.578799999999
+1001,None,None,None,None,None,None,None,None,3908.4036
