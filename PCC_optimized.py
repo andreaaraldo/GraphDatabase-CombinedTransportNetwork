@@ -87,8 +87,8 @@ def get_times_first_station(res):
 
 def get_dataframe(centroid_id): # Crée un dataframe pour chaque centroïde contenant les destinations, le coût total du PCC associé, et le temps de trajet direct à pieds (vol d'oiseau).
     distance = distances[distances['centroid_id'] == centroid_id][['distance', 'stop_id']].reset_index(drop=True)
-    stops_in_radius = stops[(stops['stop_id'].isin(distance['stop_id'])) & (distance['distance'] <= ray_max) & (distance['distance'] > ray_min)]
-
+    stops_in_radius = distance[ (distance['distance'] <= ray_max) & (distance['distance'] > ray_min)]
+    
     destinations = []
     total_times = []
     transport = []
@@ -101,10 +101,10 @@ def get_dataframe(centroid_id): # Crée un dataframe pour chaque centroïde cont
     direct_walk_times = []
     station_atteintes = []
 
-    for _, stop in stops_in_radius.iterrows():
+    for _, stop in stops_in_radius.astype(int).iterrows():
         dist = distance.loc[distance['stop_id'] == stop.stop_id, 'distance'].values[0]
         query = shortest_path(centroid_id, stop.stop_id)
-        print(query)
+        # print(query)
         results = get_res(driver, query)
 
         if results:
@@ -148,9 +148,8 @@ def get_dataframe(centroid_id): # Crée un dataframe pour chaque centroïde cont
 
     df_infos = pd.DataFrame({
         'station dans rayon': stops_in_radius['stop_id'],
-        'station atteintes': destinations
+        'station atteintes': station_atteintes
     })
-
     print('OK')
     return df, df_infos
 
@@ -176,7 +175,18 @@ print("Number of hours : ", h/60)
 ###############################################################################
 # Gestion de dossiers 
 ###############################################################################
+
+#if nb_DRT =0, i.e we calculate all accessibility of all centroids
+
+if nb_DRT==0:
+    path_centroids = os.path.join(Data,"centroids.txt")
+    centroids = pd.read_csv(path_centroids)['centroid_id'].unique()
+    centroids = pd.DataFrame({'centroid_id': centroids})
+    path_idstxt = os.path.join("Results_{}".format(Data),"ids.txt")
+    centroids.to_csv(path_idstxt, index=False, header=True)
+
 # id des centroides pour lesquelles on calcule l'accessibilite
+
 path_ids = os.path.normpath("./Results_{}/ids.txt".format(Data))
 centr = pd.read_csv(path_ids)['centroid_id']
 print("centroid_id : ", centr)
