@@ -70,12 +70,10 @@ for i in range(len(stops_filtered)):
 plt.legend()
 plt.title('Inaccessibilité pour {}DRT \n Moyenne inaccessibilitée = {:.2f}'.format(nb_DRT, inacc_moy))
 
-path_save_fig = os.path.normpath("./Results_{}/Inaccessibilite.png".format(Data))
+path_save_fig = os.path.normpath("./Results_{}/Graph/Inaccessibilite.png".format(Data))
 plt.savefig(path_save_fig, format = 'png') 
 plt.show()
 plt.close()
-
-
 
 
 
@@ -111,9 +109,9 @@ if nb_DRT > 0 :
 for i in range(len(stops_filtered)):
     plt.annotate(stops_filtered['stop_id'][i], xy=(stops_filtered['stop_lon'][i], stops_filtered['stop_lat'][i]), textcoords='offset points', xytext=(0,5), ha='center', fontweight='bold')
 plt.legend()
-plt.title('Accessibilité pour {}DRT \n Moyenne accessibilitée = {:.2f}'.format(nb_DRT, acc_moy))
+plt.title('Accessibilité pour {}DRT \n Moyenne accessibilitée = {:.2e}'.format(nb_DRT, acc_moy))
 
-path_save_fig = os.path.normpath("./Results_{}/Accessibilite.png".format(Data))
-plt.savefig(path_save_fig, format = 'png') 
+path_save_fig_acc = os.path.normpath("./Results_{}/Graph/Accessibilite.png".format(Data))
+plt.savefig(path_save_fig_acc, format = 'png') 
 plt.show()
 plt.close()
