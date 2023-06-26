@@ -41,8 +41,8 @@ merged_data = data_centroids_drop.merge(res, left_on='centroid_id', right_on='ce
 somme_inacc = res['inaccessibilite'].sum()
 nb_centroids = res.shape[0]
 print("\n \n\n\n\n\n\n\n", res.head())
-#inacc_moy = somme_inacc/nb_centroids
-inacc_moy = 1
+inacc_moy = somme_inacc/nb_centroids
+#inacc_moy = 1
 
 ################################################################################
 # Tracer le graphique
@@ -57,7 +57,7 @@ plt.scatter(x, y, c=c, alpha=0.5, marker='o', label="Centroids")
 # Ajouter une légende pour la couleur
 plt.colorbar()
 #res_1_min_top10['inaccessibilite']
-plt.scatter(stops['stop_lon'], stops['stop_lat'], c='green', label = 'Stops', alpha = 0.5)
+plt.scatter(stops['stop_lon'], stops['stop_lat'], c='black', label = 'Stops', alpha = 0.5)
 plt.xlabel('Longitude')
 plt.ylabel('Latitude')
 
@@ -72,10 +72,8 @@ plt.title('Inaccessibilité pour {}DRT \n Moyenne inaccessibilitée = {:.2f}'.fo
 
 path_save_fig = os.path.normpath("./Results_{}/Inaccessibilite.png".format(Data))
 plt.savefig(path_save_fig, format = 'png') 
-#plt.savefig(r"./Results/Stations.svg", format = 'svg') 
 plt.show()
 plt.close()
-
 
 
 
@@ -102,7 +100,7 @@ plt.scatter(x, y, c=c, alpha=0.5, marker='o', label="Centroids")
 # Ajouter une légende pour la couleur
 plt.colorbar()
 #res_1_min_top10['accessibilite']
-plt.scatter(stops['stop_lon'], stops['stop_lat'], c='green', label = 'Stops', alpha = 0.5)
+plt.scatter(stops['stop_lon'], stops['stop_lat'], c='black', label = 'Stops', alpha = 0.5)
 plt.xlabel('Longitude')
 plt.ylabel('Latitude')
 
@@ -113,10 +111,9 @@ if nb_DRT > 0 :
 for i in range(len(stops_filtered)):
     plt.annotate(stops_filtered['stop_id'][i], xy=(stops_filtered['stop_lon'][i], stops_filtered['stop_lat'][i]), textcoords='offset points', xytext=(0,5), ha='center', fontweight='bold')
 plt.legend()
-plt.title('Accessibilité pour {}DRT \n Moyenne accessibilitée = {:.2f}'.format(nb_DRT, inacc_moy))
+plt.title('Accessibilité pour {}DRT \n Moyenne accessibilitée = {:.2f}'.format(nb_DRT, acc_moy))
 
 path_save_fig = os.path.normpath("./Results_{}/Accessibilite.png".format(Data))
 plt.savefig(path_save_fig, format = 'png') 
-#plt.savefig(r"./Results/Stations.svg", format = 'svg') 
 plt.show()
 plt.close()
