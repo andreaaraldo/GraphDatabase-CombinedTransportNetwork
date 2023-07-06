@@ -11,20 +11,10 @@ il y a à la fois des accessibilités faibles (mauvaise desserte) et des accessi
 Ou les mettre autour d'endroits où il y a des correspondances.
 '''
 
-# variables
-h = Parameters.h
-longueur = Parameters.longueur  # longitude
-largeur = Parameters.largeur    # latitude 
-Data = Parameters.Data
-
-# Vérifier le nombre d'arguments passés
-if len(sys.argv) != 2:
-    print("Usage: python3 Heuristic_simple2.py nombre_DRT")
-    sys.exit(1)
-
 # Récupérer les variables
-nb_DRT = int(sys.argv[1])
-
+nb_DRT = Parameters.nb_DRT
+Data = Parameters.Data
+h = Parameters.h
 
 # cette fonction servira à écrire dans le document qui recense les emplacements des DRTs
 def ecrire_ligne(nom_fichier, ligne, contenu):
@@ -99,12 +89,14 @@ res_stops_sorted = res_stops_merge.sort_values('accessibilite')
 print('dataframe trié : ', res_stops_sorted.head())
 
 # Extraire les m premières lignes du DataFrame trié --> les moins accessibles
-res_min_acc = res_stops_sorted.head(30)
+m = 30
+res_min_acc = res_stops_sorted.head(m)
 # Extraire les m dernières lignes du DataFrame trié --> les plus accessibles
-res_max_acc = res_stops_sorted.tail(nb_DRT)
+#res_max_acc = res_stops_sorted.tail(m)
 
-###############################################################
+##############################################################################################################################
 # On crée le dataframe dans lequel on mettra les informations 
+##############################################################################################################################
 
 
 stop_min = res_min_acc['stop_id'].tolist()
@@ -131,6 +123,7 @@ couple_min_max_zoneDRT = pd.DataFrame({
     'acc_max': acc_max,
     'diff': diff
 })
+##############################################################################################################################
 
 
 #on parcourt la liste des centroids les plus exentrés (stops dont l'accessibilité est la plus faible)
