@@ -14,6 +14,11 @@ import sys
 
 nb_DRT = Parameters.nb_DRT
 Data = Parameters.Data
+longueur_degres = Parameters.longueur_degres
+largeur_degres = Parameters.largeur_degres
+# résultats de Cathia :
+# longueur_degres : 0.051408
+# largeur_degres : 0.01799425
 
 def create_graph():
     graph = "graphe_{}".format(int(h/60))
@@ -50,10 +55,10 @@ def choose(id_station, show):
 
     station = stations.iloc[np.where(stations.stop_id == id_station)[0][0]]
     A = Point(station.station.x, station.station.y) # Les coordonnées de la station.
-    L = Point(A.x - 0.051408, A.y)                  # Le point situé à gauche de la station.
-    R = Point(A.x + 0.051408, A.y)                  # Le point situé à droite de la station.
-    U = Point(A.x, A.y + 0.01799425)                # Le point situé en haut de la station.
-    D = Point(A.x, A.y - 0.01799431)                # Le point situé en bas de la station.
+    L = Point(A.x - longueur_degres, A.y)                  # Le point situé à gauche de la station.
+    R = Point(A.x + longueur_degres, A.y)                  # Le point situé à droite de la station.
+    U = Point(A.x, A.y + largeur_degres/2)                # Le point situé en haut de la station.
+    D = Point(A.x, A.y - largeur_degres/2)                # Le point situé en bas de la station.
     UL = Point(L.x,U.y)
     DL = Point(L.x,D.y)
     UR = Point(R.x,U.y)
@@ -84,6 +89,7 @@ def choose(id_station, show):
         print("Distances avec la station '{}' :".format(id_station))
         [print(j,Geod.Inverse(A.y,A.x,i.y,i.x)['s12']) for i,j in zip([L,R,U,D,UL,DL,UR,DR],['L','R','U','D','UL','DL','UR','DR'])]
         print('\n')
+        fig.show()
     return centroids_left, centroids_right
 
 
@@ -102,9 +108,8 @@ def show_choose(station_list):
     plt.title("Stations (fonction choose)")
     plt.xlabel("Longitude", fontsize = 16)
     plt.ylabel("Latitude", fontsize = 16)
-    path_save_fig = os.path.normpath("./Results_{}/Stations.png".format(Data))
-    plt.savefig(path_save_fig, format = 'png') 
-    #plt.savefig(r"./Results/Stations.svg", format = 'svg') 
+    path_save_fig = os.path.normpath("./Results_{}/Stations.png".format(Data)) 
+    plt.savefig(path_save_fig, format = 'png')
     plt.show()
     plt.close()
 
@@ -121,13 +126,13 @@ def temps_cycle(cycle, vitesse, nb_pax): # secondes
 def M(temps_cycle, h):
     return temps_cycle/h
 
+#############################################################################################
 # Neo4j
 import neo4j
 from neo4j import GraphDatabase
 
 URI = "bolt://127.0.0.1:7687"
 USER = "neo4j"
-#USER = "neo4j_test"
 PASSWORD = "cassiopeedrt"
 driver = GraphDatabase.driver(URI, auth=(USER, PASSWORD))
 
@@ -147,12 +152,12 @@ def get_res(driver, query):
     
 def create(stop_id):
     print(stop_id, ':')
-    left, _ = choose(stop_id, show = False)
+    left, _ = choose(stop_id, show = True)
     df_centroids = pd.DataFrame()
     df_centroids['centroid_id'] = left.centroid_id
     df_centroids['longitude'] = left.longitude
     df_centroids['latitude'] = left.latitude
-    path=os.path.join("Stations_{}".format(Data),"id_centroid_station_{}.txt".format(stop_id))
+    path = os.path.join("Stations_{}".format(Data),"id_centroid_station_{}.txt".format(stop_id))
     df_centroids['centroid_id'].to_csv(path, index = False)
     for c in df_centroids.centroid_id.iloc:
         query = "MATCH (c:Centroid), (st:Stoptime) WHERE st.stop_id = {} AND c.centroid_id = {} ".format(stop_id,c)
@@ -175,7 +180,7 @@ rep_Results = os.path.normpath('./Results_{}'.format(Data))
 #si le dossier n'existe pas, on le crée :
 if not os.path.isdir(rep_Results):
     os.mkdir(rep_Results)
-
+###############################################################################
 rep_Stations = os.path.normpath("Stations_{}".format(Data))
 print(rep_Stations)
 if not os.path.exists(rep_Stations):
@@ -218,10 +223,8 @@ print(drt_time/3600, 'heures')
 print('ok \n')
 
 liste_stations = Parameters.liste_stations_DRT
-print(liste_stations)
-liste_stat = pd.DataFrame()
-liste_stat['station_list'] = liste_stations
-path_list_station = os.path.normpath('./Stations_{}/list_station_id_{}DRT.txt'.format(Data,nb_DRT))
+liste_stat = pd.DataFrame({'station_list': liste_stations})
+path_list_station = os.path.normpath('./Stations_{}/list_station_id_{}DRT.txt'.format(Data, nb_DRT))
 liste_stat.to_csv(path_list_station, index = False)
 stat = pd.read_csv(path_list_station)
 station_list = np.sort([i for i in liste_stations])
@@ -239,7 +242,7 @@ ids_centroids = []
 for i in station_list:
     print("Station :", i)
     create(i)
-    path_ids_centroids = os.path.normpath("./Stations_{}/id_centroid_station_{}.txt".format(Data,i))
+    path_ids_centroids = os.path.normpath("./Stations_{}/id_centroid_station_{}.txt".format(Data, i))
     ids_centr = pd.read_csv(path_ids_centroids).centroid_id.values
     for j in ids_centr:
         ids_centroids.append(j)
