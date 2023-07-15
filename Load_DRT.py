@@ -48,7 +48,7 @@ def choose(id_station, show):
         print("Erreur : Station n°",id_station, "non trouvée.")
         sys.exit()
 
-    #station = stations.iloc[np.where(stations.stop_id == id_station)[0][0]]
+    station = stations.iloc[np.where(stations.stop_id == id_station)[0][0]]
     A = Point(station.station.x, station.station.y) # Les coordonnées de la station.
     L = Point(A.x - 0.051408, A.y)                  # Le point situé à gauche de la station.
     R = Point(A.x + 0.051408, A.y)                  # Le point situé à droite de la station.
@@ -147,12 +147,13 @@ def get_res(driver, query):
     
 def create(stop_id):
     print(stop_id, ':')
-    left, _ = choose(stop_id, show = True)
+    left, _ = choose(stop_id, show = False)
     df_centroids = pd.DataFrame()
     df_centroids['centroid_id'] = left.centroid_id
     df_centroids['longitude'] = left.longitude
     df_centroids['latitude'] = left.latitude
-    df_centroids['centroid_id'].to_csv(r".\Stations\id_centroid_station_{}.txt".format(stop_id), index = False)
+    path=os.path.join("Stations_{}".format(Data),"id_centroid_station_{}.txt".format(stop_id))
+    df_centroids['centroid_id'].to_csv(path, index = False)
     for c in df_centroids.centroid_id.iloc:
         query = "MATCH (c:Centroid), (st:Stoptime) WHERE st.stop_id = {} AND c.centroid_id = {} ".format(stop_id,c)
         query += "AND st.departure_duration >= c.departure_duration + {} \n".format(drt_time + waiting_drt)    
@@ -174,7 +175,12 @@ rep_Results = os.path.normpath('./Results_{}'.format(Data))
 #si le dossier n'existe pas, on le crée :
 if not os.path.isdir(rep_Results):
     os.mkdir(rep_Results)
-###############################################################################
+
+rep_Stations = os.path.normpath("Stations_{}".format(Data))
+print(rep_Stations)
+if not os.path.exists(rep_Stations):
+    os.makedirs(rep_Stations)
+
 
 stops_path = os.path.normpath("./{}/stops.txt".format(Data))
 pos_centroids_path = os.path.normpath("./{}/pos_centroids.txt".format(Data))
@@ -212,9 +218,10 @@ print(drt_time/3600, 'heures')
 print('ok \n')
 
 liste_stations = Parameters.liste_stations_DRT
+print(liste_stations)
 liste_stat = pd.DataFrame()
 liste_stat['station_list'] = liste_stations
-path_list_station = os.path.normpath('./Stations/list_station_id_{}DRT.txt'.format(nb_DRT))
+path_list_station = os.path.normpath('./Stations_{}/list_station_id_{}DRT.txt'.format(Data,nb_DRT))
 liste_stat.to_csv(path_list_station, index = False)
 stat = pd.read_csv(path_list_station)
 station_list = np.sort([i for i in liste_stations])
@@ -228,16 +235,17 @@ execute(driver, query)
 
 ids_centroids = []
 
+#create DRT relation for centroid surrounding each drt station
 for i in station_list:
     print("Station :", i)
     create(i)
-    path_ids_centroids = os.path.normpath("./Stations/id_centroid_station_{}.txt".format(i))
+    path_ids_centroids = os.path.normpath("./Stations_{}/id_centroid_station_{}.txt".format(Data,i))
     ids_centr = pd.read_csv(path_ids_centroids).centroid_id.values
     for j in ids_centr:
         ids_centroids.append(j)
 df_centr_ids = pd.DataFrame()
 df_centr_ids['centroid_id'] = np.unique(ids_centroids)
-print(df_centr_ids.head())
+# print(df_centr_ids.head())
 
 path_ids = os.path.join('./Results_{}'.format(Data), 'ids.txt')
 df_centr_ids.to_csv(path_ids, index = False)
