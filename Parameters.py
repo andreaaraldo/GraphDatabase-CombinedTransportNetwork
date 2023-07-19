@@ -1,11 +1,20 @@
 import os 
+import numpy as np
+import math
+import json
 
 # Parametres
 
-nb_DRT = 0
+nb_DRT = 20
 # indiquer les données qu'on utilise 
-# Data = "Data"
-Data = "small_instance"
+Data = "Data"
+# Data = "small_instance"
+# Data = "small_instance_scaled"
+'''
+Small instance :
+largeur : 5,06km
+longueur : 3,45km
+'''
 
 ## Intervenant dans le fichier 'Reduce_Centroid_Stop.py' :
 rayon_exclusif = 6500 # supprime les centroides n'ayant aucune station situee dans ce rayon. In meters
@@ -22,15 +31,30 @@ idx_h = 0 # intervient également dans le fichier 'Res_DataFrames.py' plus bas
 h = h0[idx_h] # valeur de h actuelle
 
 densite = 26 # 26 pax/h/km^2, nombre de passagers par km² par heure
-########################
-# ROYAN
-########################
-if Data == "Data":
-    longueur = 4000 # en metres, longeur de la zone de service DRT (rectangulaire)
-    largeur = 2000 # en metres, largeur de la zone de service DRT (rectangulaire)
-elif Data == "small_instance":
-    longueur = 4000 # en metres, longeur de la zone de service DRT (rectangulaire)
-    largeur = 200 # en metres, largeur de la zone de service DRT (rectangulaire)
+
+########################################################################
+# Zones de DRT
+########################################################################
+# On cherche la latitude de la ville (pas besoin de précision) pour pouvoir convertir des km en mesure latitude/longitude
+centroids_txt = os.path.normpath('{}/centroids.txt'.format(Data))
+with open(centroids_txt, 'r') as file:
+    content = file.readlines()
+    first_line = content[1]
+    columns = first_line.split(',')     # Diviser la ligne en colonnes
+    lat = float(columns[2])    # Accéder à la valeur de centroid_lat (indice 2)
+
+
+longueur = 4000 # en metres, longueur de la zone de service DRT (rectangulaire)
+largeur = 2000 # en metres, largeur de la zone de service DRT (rectangulaire)
+
+if Data == "small_instance":
+    longueur = 800 # en metres, longueur de la zone de service DRT (rectangulaire)
+    largeur = 400 # en metres, largeur de la zone de service DRT (rectangulaire)
+
+# Calculez la distance en latitude et en longitude équivalente à longueur et largeur en degrés
+largeur_degres = largeur / (111.11 * 10**3)
+longueur_degres = longueur / (111.11 * np.abs(np.cos(math.radians(lat)))* 10**3)
+########################################################################
 
 vitesse_DRT = 30 # en km/h, vitesse moyenne des vehicules DRT
 
@@ -52,20 +76,25 @@ h_str = h0_str[idx_h] # valeur de h actuelle
 ################################################################################################
 
 # Chemin vers votre fichier .txt
-chemin_fichier = os.path.normpath('./Results_{}/Placement_DRT/DRT_heuristique_simple.txt'.format(Data))
+chemin_repertoire = os.path.normpath('./Results_{}/Placement_DRT'.format(Data))
+chemin_fichier = os.path.join(chemin_repertoire, 'DRT_placement_stops.txt')
 
-if nb_DRT == 0:
-    liste_stations_DRT = []
-else :
-    if os.path.exists(chemin_fichier):
-        # Lire le fichier .txt
-        with open(chemin_fichier, 'r') as fichier:
-            fichier = fichier.readlines()
+if not os.path.isdir(chemin_repertoire):
+    os.mkdir(chemin_repertoire)
 
-        # Extraire la liste à la ligne numéro m
-        if nb_DRT  < len(fichier):
-            liste_stations_DRT = eval(fichier[nb_DRT])
-        else:
-            print("Nous n'avons pas calculé l'heuristic pour ", nb_DRT , " DRT")
+if os.path.isfile(chemin_fichier):
+    # Lire le fichier .txt
+    with open(chemin_fichier, 'r') as file:
+        lines = file.readlines()
+    nb_DRT = int(nb_DRT)
+    # Extraire la liste à la ligne numéro m
+    if nb_DRT  < len(lines):
+        liste_stations_DRT = lines[nb_DRT]
+        # Conversion de la chaîne en liste d'entiers
+        liste_stations_DRT = json.loads(liste_stations_DRT)
+    else:
+        print("Nous n'avons pas calculé l'heuristic pour ", nb_DRT , " DRT")
+else:
+    print("Le fichier n'existe pas : ", chemin_fichier)
 
 ################################################################################################
