@@ -1,3 +1,0 @@
-station dans rayon,station atteintes
-2635,2635
-607,607

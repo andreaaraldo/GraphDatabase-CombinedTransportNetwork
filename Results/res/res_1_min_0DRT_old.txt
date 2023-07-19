@@ -1,1 +1,0 @@
-centroid,nb_destinations,trajets,trajets_ok,nb_station_DRT,DRT,DRT_ok,WALK_to_station_DRT,WALK,somme,inaccessibilite,accessibilite

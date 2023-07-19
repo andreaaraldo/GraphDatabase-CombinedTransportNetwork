@@ -1,2 +1,0 @@
-station dans rayon,station atteintes
-2385,None

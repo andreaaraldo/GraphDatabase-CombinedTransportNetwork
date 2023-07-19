@@ -1,9 +1,0 @@
-station dans rayon,station atteintes
-769,None
-768,None
-781,None
-780,None
-315,None
-316,None
-795,None
-72,None
