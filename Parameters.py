@@ -1,7 +1,6 @@
 import os 
 import numpy as np
 import math
-import json
 
 # Parametres
 
@@ -47,11 +46,11 @@ with open(centroids_txt, 'r') as file:
 longueur = 4000 # en metres, longueur de la zone de service DRT (rectangulaire)
 largeur = 2000 # en metres, largeur de la zone de service DRT (rectangulaire)
 
-if Data == "small_instance":
+if Data == "small_instance" :
     longueur = 800 # en metres, longueur de la zone de service DRT (rectangulaire)
     largeur = 400 # en metres, largeur de la zone de service DRT (rectangulaire)
 
-# Calculez la distance en latitude et en longitude équivalente à longueur et largeur en degrés
+
 largeur_degres = largeur / (111.11 * 10**3)
 longueur_degres = longueur / (111.11 * np.abs(np.cos(math.radians(lat)))* 10**3)
 ########################################################################
@@ -90,8 +89,6 @@ if os.path.isfile(chemin_fichier):
     # Extraire la liste à la ligne numéro m
     if nb_DRT  < len(lines):
         liste_stations_DRT = lines[nb_DRT]
-        # Conversion de la chaîne en liste d'entiers
-        liste_stations_DRT = json.loads(liste_stations_DRT)
     else:
         print("Nous n'avons pas calculé l'heuristic pour ", nb_DRT , " DRT")
 else:
