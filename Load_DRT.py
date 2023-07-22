@@ -3,14 +3,13 @@ import pandas as pd
 import matplotlib as matplotlib
 import matplotlib.pyplot as plt
 import time
-from pyproj import Geod
 # !pip install shapely
 # !pip install geographiclib
 from shapely.geometry import Polygon, LineString, Point
 import Parameters
 import os
-import shutil
 import sys
+from geographiclib.geodesic import Geodesic
 
 nb_DRT = Parameters.nb_DRT
 Data = Parameters.Data
@@ -19,6 +18,7 @@ largeur_degres = Parameters.largeur_degres
 # résultats de Cathia :
 # longueur_degres : 0.051408
 # largeur_degres : 0.01799425
+
 
 def create_graph():
     graph = "graphe_{}".format(int(h/60))
@@ -87,7 +87,8 @@ def choose(id_station, show):
         ax.legend(loc = (1.01,0.78), labels = ('limites','centroides à gauche','centroides à droite'))
         ax.set_title("Station '{}'.format(id_station", fontsize = 14)
         print("Distances avec la station '{}' :".format(id_station))
-        [print(j,Geod.Inverse(A.y,A.x,i.y,i.x)['s12']) for i,j in zip([L,R,U,D,UL,DL,UR,DR],['L','R','U','D','UL','DL','UR','DR'])]
+        geod = Geodesic.WGS84
+        [print(j,geod.Inverse(A.y,A.x,i.y,i.x)['s12']) for i,j in zip([L,R,U,D,UL,DL,UR,DR],['L','R','U','D','UL','DL','UR','DR'])]
         print('\n')
         fig.show()
     return centroids_left, centroids_right
@@ -223,7 +224,10 @@ print(drt_time/3600, 'heures')
 print('ok \n')
 
 liste_stations = Parameters.liste_stations_DRT
-liste_stat = pd.DataFrame({'station_list': liste_stations})
+
+print('liste_stations : ', liste_stations )
+index = list(range(len(liste_stations)))
+liste_stat = pd.DataFrame({'station_list': liste_stations}, index=index)
 path_list_station = os.path.normpath('./Stations_{}/list_station_id_{}DRT.txt'.format(Data, nb_DRT))
 liste_stat.to_csv(path_list_station, index = False)
 stat = pd.read_csv(path_list_station)
