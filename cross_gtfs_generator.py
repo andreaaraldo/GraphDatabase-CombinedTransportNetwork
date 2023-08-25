@@ -2,6 +2,8 @@ import pandas as pd
 import pandas as pd
 import os
 from datetime import datetime, timedelta
+import numpy as np
+import math
 
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
@@ -150,8 +152,9 @@ if not os.path.exists('small_instance'):
 add_agency('ABC', 'ABC', 'America/New_York', 'http://www.example.com')
 add_calendar('1', 1, 1, 1, 1, 1, 0, 0, '20230101', '20231231')
 
-D = 1  # distance between each stops in kilometers
+D = 1000  # distance between each stops in meters
 bus_speed_kmph = 20
+
 
 # 2 lines : vertical and horizontal line 
 add_route('ABC', '1', 'Vertical Route', 'VERT')
@@ -163,12 +166,19 @@ longitude = -74.0060
 
 stop_vertical = []
 stop_horizontal = []
+
+vertical_degres = D / (111.11 * 10**3)
+horizontal_degres = D / (111.11 * np.abs(np.cos(math.radians(latitude)))* 10**3)
+
+print(vertical_degres)
+print(horizontal_degres)
+
 #create stops for vertical 
 for i in range(11):
     stop_id = 1000+i
     stop_vertical.append(stop_id)
     stop_name = f'Stop {stop_id}'
-    stop_lat = latitude + (i-5) * 0.0089972
+    stop_lat = latitude + (i-5) * vertical_degres
     stop_lon = longitude
     wheelchair_boarding = 1
     zone_id = 'Zone'
@@ -181,7 +191,7 @@ for i in range(11):
         stop_horizontal.append(stop_id)
         stop_name = f'Stop {stop_id}'
         stop_lat = latitude 
-        stop_lon = longitude+ (i-5) * 0.012852
+        stop_lon = longitude+ (i-5) * horizontal_degres
         wheelchair_boarding = 1
         zone_id = 'Zone'
         add_stop(stop_id, stop_lat, stop_lon, stop_name, wheelchair_boarding, zone_id)
